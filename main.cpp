@@ -1,7 +1,6 @@
 #include <iostream>
 #include <stdlib.h>
 #include <string>
-#include <stdlib.h>
 
 using std::cout;
 using std::cin;
@@ -113,16 +112,17 @@ void AdicionarStock(){
 
     system ("CLS");
 
-    int resposta;
+    int resposta=0;
 
     cout << "A que produto pretende adicionar Stock?" << endl;
     cin >> resposta;
 
     for (int i=0; i< 50; i++){
-    if (produtos[0][i] == resposta){
+        if (produtos[0][i] == resposta){
         cout << "Quantos produtos pretende adicionar?" << endl;
         cin >> resposta;
         produtos[2][i] = produtos[2][i]+resposta;
+        }
     }
 }
 
