@@ -113,3 +113,25 @@ ROW 2   x[2][0]     x[2][1]     x[2][2]
 
 [y][x]
 */
+
+
+
+para passar de umas funcoes para outras, pedir o argumento check
+por exemplo 
+int MainMenu (bool Check)
+
+se for 0 é a primeira vez que se esta a visitar aquela janela, entao fazer system CLS e correr o programa normalmente,
+
+mas se o check for 1, quer dizer que o user ja esteve noutro menu antes e agora esta a voltar para o main menu
+
+(exemplo, 
+        Stock(bool Check){
+        codigo;
+        return 1;}
+)
+
+exemplo o programa inicia e o Check do Main Menu está a 0, da system("cls") e corre o programa
+entretanto corre a funcao para verificar o input do utilizador e a funcao Verificador da return de 1 para o check, isto corre novamente o programa do mainmenu mas diz para introduzir uma opcao valida
+depois de estar o problema resolvido, volta-se a colocar o check em 0.
+
+usa-se em todas as funcoes um switch case 0 e 1 para a funcao check.

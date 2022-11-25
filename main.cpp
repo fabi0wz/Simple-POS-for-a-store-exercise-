@@ -20,25 +20,35 @@ using std::getline;
 
 //!so para testar
 void printstocks();
-
+void MainMenu();
 //! Verificar se as opcoes que estao ser introduzidas pelo user sao validas
+
 /*
-int Verificador(int escolha){
-        while(cin.fail()){
+void Verificador(auto escolha){
+        while(cin.fail() || escolha < 0 || escolha >4){
+        cin.clear();
+        cin.ignore();
+        system("cls");
+        cout << "Insira uma opcao valida\n";
+        MainMenu();
+        }
+}
+*/
+//! \33[A ---> apaga a ultima linha couted para o ecra
+/*
+int Verificador (int escolha){
+     while(!(cin>>escolha)){
         cin.clear();
         cin.ignore();
         cout << "Insira uma opcao valida\n";
+        cout << "\33[A\n";
         cin >> escolha;
-    }
-    while (escolha < 0 || escolha >4){
-        cin.clear();
-        cin.ignore();
-        cout << "Insira uma opcao valida\n";
-        cin >> escolha;
+        system("CLS");
     }
     return escolha;
 }
 */
+
 
 //? Zona Stocks/Produtos
 void Stock ();
@@ -77,7 +87,6 @@ string ClienteString [30][2] = {{"Alberto", "Rua dos Peregrinos n219"},
 
 //? Zona Menu Principal
 void MainMenu(){
-    system("cls");
     int escolha;
     cout<<"===================================================== \n";
     cout<<" \t\tMENU \t \n ";
@@ -86,13 +95,14 @@ void MainMenu(){
     cout<<" 2.Stock\n";
     cout<<" 3.Relatorios \n";
     cout<<" 4.Clientes \n";
-
-
 //verificar se o CIN é o datatype definido, se nao for corre o while
+
  while(!(cin>>escolha)){
         cin.clear();
         cin.ignore();
         cout << "Insira uma opcao valida\n";
+        //! ainda a testar comment out
+        cout << "\33[2K\r"; //https://stackoverflow.com/questions/1508490/erase-the-current-printed-console-line
     }
    // Verificador(escolha);
 
