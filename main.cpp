@@ -25,12 +25,21 @@ void MainMenu();
 
 int Verificador(){
     int escolha;
-    while (!(cin >> escolha))
+    while (cin.fail())
     {
-        cout <<"\x1b[2A\r";  //"\x1b[2A\r" o [2A é o numero de linhas que pretendo apagar, apago as 2 linhas e \r para voltar ao inicio da linha -- https://stackoverflow.com/questions/65880290/how-do-i-delete-a-line-text-which-has-already-been-written-on-the-terminal-in-c
         cin.clear();
         cin.ignore();
-        cout <<"Insira uma opcao valida\n";
+        cout << "Insira uma opcao valida\n";
+        cout <<"\x1b[2A\r";
+        cin >> escolha;
+    }
+    while (escolha < 0 || escolha > 4)
+    {
+        cin.clear();
+        cin.ignore();
+        cout << "Insira uma opcao valida\n";
+        cout <<"\x1b[2A\r";
+        cin >> escolha;
     }
     return escolha;
 }
@@ -96,15 +105,19 @@ void MainMenu()
     cout << " 3.Relatorios \n";
     cout << " 4.Clientes \n";
     cout << endl;
-
+    cin >> escolha;
 
     // verificar se o CIN é o datatype definido
-escolha = Verificador();
-
-if (escolha < 1 || escolha >4) {
-
+do{
+    if (!cin || escolha <1 || escolha >4){
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Insira uma Opcao Valida";
+        cout << "\x1b[2A\r";
+        cout << endl;
+    }
 }
-
+while (!(cin >> escolha) || escolha <1 || escolha >4);
     // Verificador(escolha);
     switch (escolha)
     {
@@ -121,6 +134,7 @@ if (escolha < 1 || escolha >4) {
     case 99:
         printstocks();
     }
+
 }
 // Opcao Stock no Menu
 void Stock()
@@ -485,7 +499,6 @@ void AlterarNome()
 
 int main()
 {
-
     conout.settitle("Melhor Loja de Sempre");
     cout
         << settextcolor(console_text_colors::light_yellow)
