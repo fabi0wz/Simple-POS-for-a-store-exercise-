@@ -22,11 +22,10 @@ void printstocks();
 void MainMenu();
 
 //! Verificar se as opcoes que estao ser introduzidas pelo user sao validas
-
 int Verificador(int aux){
     int escolha;
     if (aux == 1){
-        if (!(cin >> escolha) || escolha < 1 || escolha > 4){
+        if (!(cin >> escolha) || escolha < 1 || escolha > 4 || escolha == 99){
             do{
                 if (!cin || escolha < 1 || escolha > 4){
                     cin.clear();
@@ -36,7 +35,7 @@ int Verificador(int aux){
                     cout << endl;
                 }
             } 
-            while (!(cin >> escolha) || escolha < 1 || escolha > 4);
+            while (!(cin >> escolha) || escolha < 1 || escolha > 4 || escolha == 99);
         }
     }
     if (aux == 2){
@@ -85,6 +84,48 @@ void CriarCliente();
 void EliminarCliente();
 void AlterarNome();
 
+void PreencherParaTeste (double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString) {
+    produtos[0][0] = 125;
+    produtos[0][1] = 5;
+    produtos[0][2] = 19.99;
+    produtos[1][0] = 126;
+    produtos[1][1] = 12;
+    produtos[1][2] = 4.99;
+    produtos[2][0] = 127;
+    produtos[2][1] = 26;
+    produtos[2][2] = 12.50;
+    produtos[3][0] = 128;
+    produtos[3][1] = 2;
+    produtos[3][2] = 1.99;
+    produtos[4][0] = 129;
+    produtos[4][1] = 50;
+    produtos[4][2] = 3.99;
+    nomeProdutos[0] = "Mesa";
+    nomeProdutos[1] = "Cadeira";
+    nomeProdutos[2] = "Candeeiro";
+    nomeProdutos[3] = "Janela";
+    nomeProdutos[4] = "Tartaruga";
+
+    ClienteInt[0][0] = 0001;
+    ClienteInt[0][1] = 932885712;
+    ClienteInt[1][0] = 0002;
+    ClienteInt[1][1] = 978264019;
+    ClienteInt[2][0] = 0003;
+    ClienteInt[2][1] = 915274921;
+    ClienteInt[3][0] = 0004;
+    ClienteInt[3][1] = 927162542;
+
+    ClienteString[0][0] = "Alberto";
+    ClienteString[0][1] = "Rua dos Peregrinos n219";
+    ClienteString[1][0] = "Claudete";
+    ClienteString[1][1] = "Rua das Tangerinas n221";
+    ClienteString[2][0] = "Filomena";
+    ClienteString[2][1] = "Travessa das Travessas";
+    ClienteString[3][0] = "Marca";
+    ClienteString[3][1] = "Viela ao contrario";
+
+}
+/*
 //! Variaveis Globais que depois precisam ser passadas para dinamicas no main *
 //*Variaveis para produtos
 double produtos[50][3] = {{125, 5, 19.99},
@@ -103,6 +144,7 @@ string ClienteString[30][2] = {{"Alberto", "Rua dos Peregrinos n219"},
                                {"Claudete", "Rua das Tangerinas n221"},
                                {"Filomena", "Travessa das Travessas"},
                                {"Marca", "Viela ao contrario"}};
+                               */
 
 //? Zona Menu Principal
 void MainMenu()
@@ -118,7 +160,7 @@ void MainMenu()
     cout << endl;
     // verificar se o CIN é o datatype definido
     escolha = Verificador(1);
-    // Verificador(escolha);
+
     switch (escolha)
     {
     // case 1: Vendas(); break;
@@ -489,8 +531,28 @@ void AlterarNome()
     }
 }
 
-int main()
-{
+int main(){
+
+    double ** produtos = new double *[50];
+    for(int i = 0; i < 50; i++){
+    produtos[i] = new double[3];
+    }
+    string * nomeProdutos = new string[50]; 
+
+    int ** ClienteInt = new int *[30];
+    for(int i = 0; i < 30; i++){
+    ClienteInt[i] = new int[2];
+    }
+
+    string ** ClienteString = new string *[30];
+    for(int i = 0; i < 30; i++){
+    ClienteString[i] = new string[2];
+    }
+
+    PreencherParaTeste();
+
+
+
     conout.settitle("Melhor Loja de Sempre");
     cout
         << settextcolor(console_text_colors::light_yellow)
