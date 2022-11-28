@@ -20,44 +20,55 @@ using std::string;
 //! so para testar
 void printstocks();
 void MainMenu();
+
 //! Verificar se as opcoes que estao ser introduzidas pelo user sao validas
 
-
-int Verificador(){
+int Verificador(int aux){
     int escolha;
-    while (cin.fail())
-    {
-        cin.clear();
-        cin.ignore();
-        cout << "Insira uma opcao valida\n";
-        cout <<"\x1b[2A\r";
-        cin >> escolha;
+    if (aux == 1){
+        if (!(cin >> escolha) || escolha < 1 || escolha > 4){
+            do{
+                if (!cin || escolha < 1 || escolha > 4){
+                    cin.clear();
+                    cin.ignore(256, '\n');
+                    cout << "Insira uma Opcao Valida";
+                    cout << "\x1b[2A\r";
+                    cout << endl;
+                }
+            } 
+            while (!(cin >> escolha) || escolha < 1 || escolha > 4);
+        }
     }
-    while (escolha < 0 || escolha > 4)
-    {
-        cin.clear();
-        cin.ignore();
-        cout << "Insira uma opcao valida\n";
-        cout <<"\x1b[2A\r";
-        cin >> escolha;
+    if (aux == 2){
+        if (!(cin >> escolha) || escolha < 0 || escolha > 3){
+            do{
+                if (!cin || escolha < 0 || escolha > 3){
+                    cin.clear();
+                    cin.ignore(256, '\n');
+                    cout << "Insira uma Opcao Valida";
+                    cout << "\x1b[2A\r";
+                    cout << endl;
+                }
+            } 
+            while (!(cin >> escolha) || escolha < 0 || escolha > 3);
+        } 
+    }
+        if (aux == 3){
+        if (!(cin >> escolha)){
+            do{
+                if (!cin){
+                    cin.clear();
+                    cin.ignore(256, '\n');
+                    cout << "Insira um Codigo de Produto Valido";
+                    cout << "\x1b[2A\r";
+                    cout << endl;
+                }
+            } 
+            while (!(cin >> escolha));
+        } 
     }
     return escolha;
 }
-
-//! \33[A ---> apaga a ultima linha couted para o ecra
-/*
-int Verificador (int escolha){
-     while(!(cin>>escolha)){
-        cin.clear();
-        cin.ignore();
-        cout << "Insira uma opcao valida\n";
-        cout << "\33[A\n";
-        cin >> escolha;
-        system("CLS");
-    }
-    return escolha;
-}
-*/
 
 //? Zona Stocks/Produtos
 void Stock();
@@ -105,36 +116,28 @@ void MainMenu()
     cout << " 3.Relatorios \n";
     cout << " 4.Clientes \n";
     cout << endl;
-    cin >> escolha;
-
     // verificar se o CIN é o datatype definido
-do{
-    if (!cin || escolha <1 || escolha >4){
-        cin.clear();
-        cin.ignore(10000, '\n');
-        cout << "Insira uma Opcao Valida";
-        cout << "\x1b[2A\r";
-        cout << endl;
-    }
-}
-while (!(cin >> escolha) || escolha <1 || escolha >4);
+    escolha = Verificador(1);
     // Verificador(escolha);
     switch (escolha)
     {
     // case 1: Vendas(); break;
     case 2:
+        system("cls");
         Stock();
         break;
     case 3:
+        system("cls");
         Relatorios();
         break;
     case 4:
+        system("cls");
         Clientes();
         break;
     case 99:
+        system("cls");
         printstocks();
     }
-
 }
 // Opcao Stock no Menu
 void Stock()
@@ -146,35 +149,25 @@ void Stock()
     cout << "2.Adicionar Stock \n";
     cout << "3.Eliminar Produto \n";
     cout << "0.Menu Principal \n";
-    cin >> escolha;
 
-    while (cin.fail())
-    {
-        cin.clear();
-        cin.ignore();
-        cout << "Insira uma opcao valida\n";
-        cin >> escolha;
-    }
-    while (escolha < 0 || escolha > 4)
-    {
-        cin.clear();
-        cin.ignore();
-        cout << "Insira uma opcao valida\n";
-        cin >> escolha;
-    }
+    escolha = Verificador(2);
 
     switch (escolha)
     {
     case 0:
+        system("cls");
         MainMenu();
         break;
     case 1:
+        system("cls");
         CriarArtigo();
         break;
     case 2:
+        system("cls");
         AdicionarStock();
         break;
     case 3:
+        system("cls");
         EliminarArtigo();
         break;
     }
@@ -208,10 +201,12 @@ void CriarArtigo()
     cin >> resposta;
     if (resposta == 1)
     {
+        system("cls");
         CriarArtigo();
     }
     else
     {
+        system("cls");
         Stock();
     }
 }
@@ -219,14 +214,10 @@ void CriarArtigo()
 // adicionar stock ao array Produtos
 void AdicionarStock()
 {
-
-    system("cls");
-
-    int resposta = 0;
-
+    int resposta;
     cout << "A que produto pretende adicionar Stock?" << endl;
     cout << "\n\n0. Voltar ao menu anterior\n";
-    cin >> resposta;
+    resposta == Verificador(3);
 
     for (int i = 0; i < 50; i++)
     {
@@ -270,6 +261,7 @@ void AdicionarStock()
                 AdicionarStock();
             }
         }
+
     }
 }
 
