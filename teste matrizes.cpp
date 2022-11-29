@@ -209,3 +209,23 @@ for(int i = 0; i < 30; i++){
 
     return 0;
 }
+
+
+
+
+int Verificador(int aux){
+    int escolha;
+    if (aux == 1){
+        if (!(cin >> escolha) || escolha < 1 || escolha > 4 || escolha != 99){
+            do{
+                if (!cin || escolha < 1 || escolha > 4 || escolha != 99){
+                    cin.clear();
+                    cin.ignore(256, '\n');
+                    cout << "Insira uma Opcao Valida";
+                    cout << "\x1b[2A\r";
+                    cout << endl;
+                }
+            } 
+            while (!(cin >> escolha) || escolha < 1 || escolha > 4 || escolha != 99);
+        }
+    }
