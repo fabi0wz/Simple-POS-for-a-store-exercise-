@@ -18,7 +18,7 @@ using std::getline;
 using std::string;
 
 //! so para testar
-void printstocks(double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString);
+void printstocks(double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString, int aux2);
 int Verificador(int aux);
 
 
@@ -83,8 +83,7 @@ for(int i = 0; i < 30; i++){
     conout.settitle("Melhor Loja de Sempre");
     cout
         << settextcolor(console_text_colors::light_yellow)
-        << setbgcolor(console_bg_colors::cyan)
-        << "This text is colored: ";
+        << setbgcolor(console_bg_colors::cyan);
 
     MainMenu(produtos, nomeProdutos, ClienteInt, ClienteString);
 
@@ -123,7 +122,10 @@ void MainMenu(double **produtos, string *nomeProdutos, int **ClienteInt, string 
         break;
     case 99:
         system("cls");
-        printstocks(produtos, nomeProdutos, ClienteInt, ClienteString);
+        printstocks(produtos, nomeProdutos, ClienteInt, ClienteString, 2);
+    case 98:
+        system("cls");
+        printstocks(produtos, nomeProdutos, ClienteInt, ClienteString, 1);
     }
 }
 // Opcao Stock no Menu
@@ -476,21 +478,29 @@ void AlterarNome(double **produtos, string *nomeProdutos, int **ClienteInt, stri
     }
 }
 
-void printstocks(double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString)
+void printstocks(double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString, int aux2)
 {
+
+    int middle = conout.getsize().X/2;
+
+    if (aux2 == 1){
     int a;
     for (int i = 0; i < 50; i++)
     {
         if (produtos[i][0] != 0)
         {
-            cout << "Nome: " << nomeProdutos[i] << " | ";
-            ;
-            cout << "Codigo Produto: " << produtos[i][0] << " | ";
-            cout << "Stock: " << produtos[i][1] << " | ";
-            cout << "Preco: " << produtos[i][2] << " | ";
+            cout << setposx(middle-40) << "| Nome: " << nomeProdutos[i];
+            cout << setposx(middle-20) <<" | Codigo Produto: " << produtos[i][0];
+            cout << setposx((middle-40)+46) <<" | Stock: " << produtos[i][1];
+            cout << setposx((middle-40)+62) <<" | Preco: " << produtos[i][2];
+            cout << setposx((middle-40)+80) <<" | ";
             cout << endl;
         }
     }
+    cin >> a;
+}
+ if (aux2 == 2){
+    int a;
     for (int i = 0; i < 30; i++)
     {
         if (ClienteInt[i][0] != 0)
@@ -505,13 +515,14 @@ void printstocks(double **produtos, string *nomeProdutos, int **ClienteInt, stri
     }
     cin >> a;
 }
+}
 
 //! Verificar se as opcoes que estao ser introduzidas pelo user sao validas
 int Verificador(int aux){
     int escolha;
 
     if (aux == 1){
-        if ((!(cin >> escolha) || escolha < 1 || escolha > 4) && escolha != 99){
+        if ((!(cin >> escolha) || escolha < 1 || escolha > 4) && escolha != 99 && escolha != 98){
             do{
                 if ((!cin || escolha < 1 || escolha > 4) && escolha != 99){
                     cin.clear();
