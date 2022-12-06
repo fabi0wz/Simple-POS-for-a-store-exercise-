@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string>
 #include <unistd.h>
+#include <time.h>
 
 // header para editar o terminal
 #include "conmanip.h"
@@ -20,6 +21,9 @@ using std::string;
 //! so para testar
 void printstocks(double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString, int aux2);
 int Verificador(int aux);
+void printTime();
+
+void printFatura(double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString, int aux2);
 
 
 void MainMenu(double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString);
@@ -42,7 +46,21 @@ void AlterarNome(double **produtos, string *nomeProdutos, int **ClienteInt, stri
 //!Preencher o os stocks/clientes para testes
 void PreencherParaTeste (double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString);
 
-
+//! M A I N  M A I N  M A I N  M A I N  
+//! M A I N  M A I N  M A I N  M A I N  
+//! M A I N  M A I N  M A I N  M A I N  
+//! M A I N  M A I N  M A I N  M A I N 
+//! M A I N  M A I N  M A I N  M A I N  
+//! M A I N  M A I N  M A I N  M A I N  
+//! M A I N  M A I N  M A I N  M A I N  
+//! M A I N  M A I N  M A I N  M A I N  
+//! M A I N  M A I N  M A I N  M A I N 
+//! M A I N  M A I N  M A I N  M A I N  
+//! M A I N  M A I N  M A I N  M A I N  
+//! M A I N  M A I N  M A I N  M A I N  
+//! M A I N  M A I N  M A I N  M A I N  
+//! M A I N  M A I N  M A I N  M A I N 
+//! M A I N  M A I N  M A I N  M A I N  
 int main(){
 
     double ** produtos = new double *[50];
@@ -93,6 +111,7 @@ for(int i = 0; i < 30; i++){
 //? Zona Menu Principal
 void MainMenu(double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString)
 {
+    
     int escolha;
     cout << "===================================================== \n";
     cout << " \t\tMENU \t \n ";
@@ -128,7 +147,7 @@ void MainMenu(double **produtos, string *nomeProdutos, int **ClienteInt, string 
         printstocks(produtos, nomeProdutos, ClienteInt, ClienteString, 1);
     }
 }
-// Opcao Stock no Menu
+//! Opcao Stock no Menu
 void Stock(double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString)
 {
     system("cls");
@@ -162,7 +181,7 @@ void Stock(double **produtos, string *nomeProdutos, int **ClienteInt, string **C
     }
 }
 
-// Criar Artigos dentro do Stock
+//? Criar Artigos dentro do Stock
 void CriarArtigo(double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString)
 {
     int resposta;
@@ -200,7 +219,7 @@ void CriarArtigo(double **produtos, string *nomeProdutos, int **ClienteInt, stri
     }
 }
 
-// adicionar stock ao array Produtos
+//? adicionar stock ao array Produtos
 void AdicionarStock(double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString)
 {
     int resposta;
@@ -254,7 +273,7 @@ void AdicionarStock(double **produtos, string *nomeProdutos, int **ClienteInt, s
     }
 }
 
-// Eliminar produto do array Produtos
+//? Eliminar produto do array Produtos
 void EliminarArtigo(double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString)
 {
 
@@ -301,7 +320,7 @@ void EliminarArtigo(double **produtos, string *nomeProdutos, int **ClienteInt, s
     }
 }
 
-// Opcao Relatorios no Menu
+//! Opcao Relatorios no Menu
 void Relatorios(double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString)
 {
     int escolha;
@@ -311,7 +330,7 @@ void Relatorios(double **produtos, string *nomeProdutos, int **ClienteInt, strin
     cout << "3.Relatorio Total \n";
     cin >> escolha;
 }
-// Opcao clientes no Menu
+//! Opcao clientes no Menu
 void Clientes(double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString)
 {
     int escolha;
@@ -339,6 +358,7 @@ void Clientes(double **produtos, string *nomeProdutos, int **ClienteInt, string 
     }
 }
 
+//? Criar Cliente
 void CriarCliente(double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString)
 {
     int resposta;
@@ -375,6 +395,7 @@ void CriarCliente(double **produtos, string *nomeProdutos, int **ClienteInt, str
     }
 }
 
+//? Eliminar Cliente 
 void EliminarCliente(double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString)
 {
 
@@ -421,6 +442,7 @@ void EliminarCliente(double **produtos, string *nomeProdutos, int **ClienteInt, 
     }
 }
 
+//? Alterar nome de Cliente
 void AlterarNome(double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString)
 {
 
@@ -478,6 +500,7 @@ void AlterarNome(double **produtos, string *nomeProdutos, int **ClienteInt, stri
     }
 }
 
+//? Funcao para imprimir todo o stock no ecra, falta terminar o SETPOS
 void printstocks(double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString, int aux2)
 {
 
@@ -517,7 +540,7 @@ void printstocks(double **produtos, string *nomeProdutos, int **ClienteInt, stri
 }
 }
 
-//! Verificar se as opcoes que estao ser introduzidas pelo user sao validas
+//! Verificar se as opcoes que estao ser introduzidas pelo user sao validas, se sao o datatype pedido ou se sao opcoes validas
 int Verificador(int aux){
     int escolha;
 
@@ -606,4 +629,22 @@ void PreencherParaTeste (double **produtos, string *nomeProdutos, int **ClienteI
     ClienteString[3][0] = "Marca";
     ClienteString[3][1] = "Viela ao contrario";
 
+}
+
+void printTime(){
+        //! imprimir o tempo atual na fatura
+    time_t my_time = time(NULL);
+    //! ctime converte o time_t para um string
+    cout << ctime(&my_time);
+};
+
+void printFatura(double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString, int aux2){
+       cout <<"Numero da Fatura"<< endl
+            <<"Numero do cliente"<< endl
+            <<"Numero de Linha"<< endl
+            <<"Nome do Produto"<< endl
+            <<"Preco s/IVA produtos[preco custo]"<< endl
+            <<"IVA 23%"<< endl
+            <<"Total C/Iva = preco s/iva + preco s/iva * 23%"<< endl
+            <<"Troco = Total C/iva - ValordadoporCliente"<< endl;
 }
