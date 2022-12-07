@@ -25,8 +25,10 @@ void printTime();
 
 void printFatura(double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString, int aux2);
 
-
+void WelcomeMenu(double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString);
 void MainMenu(double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString);
+
+//void MainMenuFuncionario (double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString);
 
 //? Zona Stocks/Produtos
 void Stock(double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString);
@@ -147,6 +149,7 @@ void MainMenu(double **produtos, string *nomeProdutos, int **ClienteInt, string 
         printstocks(produtos, nomeProdutos, ClienteInt, ClienteString, 1);
     }
 }
+
 //! Opcao Stock no Menu
 void Stock(double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString)
 {
@@ -647,4 +650,45 @@ void printFatura(double **produtos, string *nomeProdutos, int **ClienteInt, stri
             <<"IVA 23%"<< endl
             <<"Total C/Iva = preco s/iva + preco s/iva * 23%"<< endl
             <<"Troco = Total C/iva - ValordadoporCliente"<< endl;
+}
+
+void WelcomeMenu(double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString) {
+
+int i = 0, user, size = 5, optionGeral;
+
+bool repeticao = true;
+    while (repeticao)
+    {
+        system("pause");
+        system("cls");
+        cout << "**************************" << endl;
+        cout << "1.gerente" << endl;
+        cout << "2.funcionario" << endl;
+        cout << "3.sair" << endl;
+        cout << "**************************" << endl;
+        cout << "OPTION (munu inicial) : ";
+        cin >> optionGeral;
+
+    switch (optionGeral)
+        {
+        case 1:
+            system("cls");
+            MainMenu(produtos, nomeProdutos, ClienteInt, ClienteString);
+            break;
+        case 2:
+            system("cls");
+            //criar cliente
+            //ja sou cliente: fazer compra
+            //showMenu pode ficar dentro da funcao cliente depois do login
+            //MainMenuFuncionario(produtos, nomeProdutos, ClienteInt, ClienteString);
+
+            break;
+        case 3:
+            system("cls");
+            repeticao = false;
+            // break;
+        default:
+            break;
+        }
+}
 }
