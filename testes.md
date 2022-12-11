@@ -2,12 +2,14 @@
 
 # Produtos
 ### Produtos (2D ARRAY)
-|index|ID PRODUTO|STOCK|PRECO|
-|:-|:-|:-|:-|
-|0|125|5|2.99|
-|1|126|4|27|
-|2|127|2|39.99|
-|3|128|7|4.99|
+|index|ID PRODUTO|STOCK|PRECO|QtdVendas|
+|:-|:-|:-|:-|:-|
+|0|125|5|2.99|2|
+|1|126|4|27|5|
+|2|127|2|39.99|6|
+|3|128|7|4.99|3|
+
+fazer produtos[3][i] = produtos[3][i] + Quantidade Vendida
 
 ### NomeProdutos (array)
 |index|0|1|2|3|
@@ -33,24 +35,26 @@
 
 # Vendas
 ## Venda (2D ARRAY)
-|index|N Venda|Cliente|
-|:-|:-|:-|
-|0|1235|id cliente|
-|1|5134|id cliente|
-|2|551234|id cliente|
-|3|1345|id cliente|
+|N Venda|Cliente|idProduto|idProduto|idProduto|
+|:-|:-|:-|:-|:-|
+|id venda|id cliente|idProduto|idProduto|idProduto|
+|id venda|id cliente|idProduto|idProduto|idProduto|
+|id venda|id cliente|idProduto|idProduto|idProduto|
+|id venda|id cliente|idProduto|idProduto|idProduto|
 
-## Venda Produtos (Array)
-|index|0|1|2|3|4|
-|:-|:-|:-|:-|:-|:-|
-|Codigo Produto|1235|1324|12345|412|1356|12345|
+precos faz-se Venda [i][2,3,4,5 etc while != 0]
 
-## Venda Produtos Quantidade (Array)
+funcao update preco
 
-|index|0|1|2|3|4|
-|:-|:-|:-|:-|:-|:-|
-|Quantidade|4|5|12|2|1|25|
+precototal = 
 
+inserir dados na venda
+
+        while input != 0 (checkout)
+                cout insira codigo produto
+                        cin Venda
+                cout insira quantidade
+                        cin Qtdvenda
 
 1. Venda
 - Selecionar Produtos
