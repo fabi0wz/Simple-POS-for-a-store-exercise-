@@ -5,7 +5,7 @@ using namespace std;
 
 void PreencherParaTeste (double **produtos, string *nomeProdutos);
 void showMenu(double **produtos, string *nomeProdutos);
-double compra(double **produtos, string *nomeProdutos, int **Vendas);
+double Vendas(double **produtos, string *nomeProdutos, int **StoreVendas);
 
 int main(){
 
@@ -35,47 +35,43 @@ int main(){
     }
 
     
-    //!declarar matriz Vendas (guarda numero da venda e o codigo do produto)
-    int ** Vendas = new int *[100];
+    //!declarar matriz StoreVendas (guarda numero da venda e o codigo do produto)
+    int ** StoreVendas = new int *[100];
 
     for(int i = 0; i < 100; i++)
     {
-    Vendas[i] = new int[52];
+    StoreVendas[i] = new int[51];
     }
 
-    //!Inicilizar matriz Vendas a 0 (Guarda as quantidades das vendas da matriz Vendas)
+    //!Inicilizar matriz StoreVendas a 0 (Guarda as quantidades das StoreVendas da matriz StoreVendas)
     for(int i = 0; i < 100; i++)
     {
-        for(int j = 0; j < 52; j++)
+        for(int j = 0; j < 51; j++)
         {
-            Vendas[i][j] = 0;
+            StoreVendas[i][j] = 0;
         }
     }
 
     //!funcao para preencher os vetores com alguns valores default
     PreencherParaTeste(produtos, nomeProdutos);
-    total = compra(produtos, nomeProdutos, Vendas);
+    total = Vendas(produtos, nomeProdutos, StoreVendas);
 
     cout << "1. Escolher Cliente" << endl
          << "2. Checkout/ Cliente final" << endl;
          system("pause");
 }
 
-double compra(double **produtos, string *nomeProdutos, int **Vendas) {
+double Vendas(double **produtos, string *nomeProdutos, int **StoreVendas) {
 
-    double total = 0;
+    double subtotal = 0;
     int choice, numeroVenda, quantidade, size;
 
     // procurou o primeiro spot com um 0 (vazio), gravou o numero dessa posicao e atribuiu a essa posicao um numero de venda
     //! o numeroVenda vai ser o mesmo durante todo o processo desta venda    
     for (int i = 0; i<50; i++){
-        if (Vendas[0][i] == 0){
-            if (i == 0) {
-                numeroVenda = i;
-                Vendas[i][0] = numeroVenda + 1;
-            }
+        if (StoreVendas[i][0] == 0){
             numeroVenda = i;
-            Vendas[i][0] = numeroVenda + 1;
+            StoreVendas[i][0] = numeroVenda + 1;
         }
         break;
     } 
@@ -110,28 +106,14 @@ double compra(double **produtos, string *nomeProdutos, int **Vendas) {
                     cout << "Quantidade indisponivel" << endl;
                     quantidade = 0;
                 }
-            total = total + (quantidade * produtos[choice-1][2]);// calcula o valor total
-            Vendas[numeroVenda][choice] = Vendas[numeroVenda][choice] + quantidade; // guarda o index no index do produto a quantidade vendida
+            subtotal = subtotal + (quantidade * produtos[choice-1][2]);// calcula o valor subtotal (sem iva e sem lucro)
+            StoreVendas[numeroVenda][choice] = StoreVendas[numeroVenda][choice] + quantidade; // guarda o index no index do produto a quantidade vendida
             produtos[choice-1][1] = (produtos[choice -1][1] - quantidade); //remove a quantidade escolhida do stock
         }
-        cout << "Subtotal: " << total << endl;
+        cout << "Subtotal: " << subtotal << endl;
     }
-    return total;
+    return subtotal;
 }
-
-
-void showMenu(double **produtos, string* nomeProdutos) {
-    cout << "**********MENU**********" << endl;
-    for (int i = 0; i < 50; i++)
-    {
-        cout << i + 1 << nomeProdutos[i] << endl;
-        cout << "Qtd: " << produtos[i][1] << endl;
-    }
-    cout << "0.Finalizar compra" << endl;
-    cout << "9.logout" << endl;
-    cout << "************************" << endl;
-}
-
 
 
 void PreencherParaTeste (double **produtos, string *nomeProdutos) {

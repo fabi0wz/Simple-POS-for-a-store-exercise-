@@ -10,10 +10,10 @@ console_out conout(ctxout);
 
 void welcome();
 void mainmenu();
-void printnatal();
+void PrintLojinha();
 void printcomputer ();
 
-void printnatal(){
+void PrintLojinha(){
 
 int middle = conout.getsize().X/2; //! cria o middle do ecra 
 
@@ -66,7 +66,7 @@ void welcome() {
 int middle = conout.getsize().X/2; //! cria o middle do ecra 
 // cout << setposx(middle-40)
 
-printnatal();
+PrintLojinha();
 
 cout
 << endl

@@ -2,45 +2,54 @@
 
 # Produtos
 ### Produtos (2D ARRAY)
-|index|ID PRODUTO|STOCK|PRECO|QtdVendas|
-|:-|:-|:-|:-|:-|
-|0|125|5|2.99|2|
-|1|126|4|27|5|
-|2|127|2|39.99|6|
-|3|128|7|4.99|3|
+|ID PRODUTO|STOCK|PRECO|QtdVendida|
+|:-|:-|:-|:-|
+|1|5|2.99|2|
+|2|4|27|5|
+|3|2|39.99|6|
+|4|7|4.99|3|
 
 fazer produtos[3][i] = produtos[3][i] + Quantidade Vendida
 
 ### NomeProdutos (array)
-|index|0|1|2|3|
+|index|1|2|3|4|
 |:-|:-|:-|:-|:-|
-||Mesa|Cadeira|tartaruga|Guaxini|
+|nome produto|Mesa|Cadeira|tartaruga|Guaxini|
 
 # Clientes
 ### ClienteInt (2D ARRAY)
-|index|ID Cliente|Contacto|
-|:-|:-|:-|
-|0|0123|932716345|
-|1|4284|923716274|      
-|2|5827|918675809|
-|3|4842|937576682|
+|ID Cliente|Contacto|
+|:-|:-|
+|0123|932716345|
+|4284|923716274|      
+|5827|918675809|
+|4842|937576682|
 
 ## ClienteString (2D ARRAY)
-|index|Nome|Morada|
-|:-|:-|:-|
-|0|Alfredo|Rua das Laranjas|
-|1|Carlos|Rua das Tanjerinas|
-|2|Tatiana|Travessa das Tartarugas|
-|3|Pedro|Rua das Tartar|
+|Nome|Morada|
+|:-|:-|
+|Alfredo|Rua das Laranjas|
+|Carlos|Rua das Tanjerinas|
+|Tatiana|Travessa das Tartarugas|
+|Pedro|Rua das Tartar|
 
 # Vendas
-## Venda (2D ARRAY)
-|N Venda|Cliente|idProduto|idProduto|idProduto|
-|:-|:-|:-|:-|:-|
-|id venda|id cliente|idProduto|idProduto|idProduto|
-|id venda|id cliente|idProduto|idProduto|idProduto|
-|id venda|id cliente|idProduto|idProduto|idProduto|
-|id venda|id cliente|idProduto|idProduto|idProduto|
+## StoreVendas (2D ARRAY)
+|N Venda|idProduto|idProduto|idProduto|
+|:-|:-|:-|:-|
+|idVenda|Qtd|Qtd|Qtd|
+|idVenda|Qtd|Qtd|Qtd|
+|idVenda|Qtd|Qtd|Qtd|
+|idVenda|Qtd|Qtd|Qtd|
+
+## InfoVendas
+|NumCliente|subtotal|TotalEntregue|Troco|
+|:-|:-|:-|:-|
+|NCliente|subtotal|valorentregue|troco|
+|NCliente|subtotal|valorentregue|troco|
+|NCliente|subtotal|valorentregue|troco|
+|NCliente|subtotal|valorentregue|troco|
+
 
 precos faz-se Venda [i][2,3,4,5 etc while != 0]
 
@@ -57,9 +66,10 @@ inserir dados na venda
                         cin Qtdvenda
 
 1. Venda
-- Selecionar Produtos
-    Se carregar no # por exemplo --> checkout e termina de registar e avança para proxima funcao if (input==#)
-    print talão
+- Menu Vendas
+- Realizar Vendas
+- Adicionar N CLiente~
+- Checkout
 
 2. Stock
 - Adicionar novo Artigo
