@@ -28,7 +28,7 @@ void printFatura(double **produtos, string *nomeProdutos, int **ClienteInt, stri
 void welcome();
 void PrintLojinha();
 void printMainMenu();
-void printMenuCompras(double **produtos, string *nomeProdutos, int size[]);
+void printMenuCompras(double **produtos, string *nomeProdutos, int tamanho, int size[], double subtotal, int numeroVenda, int **StoreVendas);
 
 
 void WelcomeMenu(double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString, int **StoreVendas, double **InfoVendas);
@@ -148,8 +148,8 @@ int main(){
 }
 
 //? Zona Menu Principal
-void MainMenu(double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString, int **StoreVendas, double **InfoVendas)
-{
+void MainMenu(double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString, int **StoreVendas, double **InfoVendas){
+    
     const int VENDAS = 1, STOCK = 2, RELATORIOS = 3, CLIENTES = 4;
     int escolha;
     system("cls");
@@ -205,22 +205,34 @@ void MenuVendas (double **produtos, string *nomeProdutos, int **ClienteInt, stri
             if (StoreVendas[i][0] == 0){
                 numeroVenda = i;
                 StoreVendas[i][0] = numeroVenda + 1;
+                break;
             }
-            break;
         }
     }
+    
     subtotal = Vendas (produtos, nomeProdutos, StoreVendas, numeroVenda); //Entra logo na funcao de Vendas, onde escolhe os produtos para adicionar ao cart
     InfoVendas[numeroVenda][1] = subtotal; // guarda o valor do subtotal na matriz de info sobre a venda
     total = (subtotal + (subtotal * 0.3)) + (subtotal * 0.23);
     
+    if (subtotal == 0) {
+        StoreVendas[numeroVenda][0] = 0;
+    }
+
     if (subtotal != 0) {
 
         InserirNumeroCliente(ClienteInt, ClienteString, InfoVendas, numeroVenda); //adicionar numero cliente na fatura
         
         system ("cls");
-        int escolha;
-        cout << "1. Checkout" << endl
-            << "2. Cancelar Venda" << endl;
+        int escolha, tamanho =0;
+
+        for (int i = 0; i<50; i++){
+            if (produtos[i][0] != 0){
+                tamanho++; //tamanho das escolhas 1 a x
+            }
+        }
+    
+        cout << setposx (1) << setposy(tamanho + 18) << "1. Checkout" << endl
+             << setposx (1) << setposy(tamanho + 19) << "2. Cancelar Venda" << endl;
         cin >> escolha;
 
         switch (escolha){
@@ -230,9 +242,13 @@ void MenuVendas (double **produtos, string *nomeProdutos, int **ClienteInt, stri
             break;
         
         case 2:
-            for (int i = 0; i< 51; i++){
+            for (int i = 0; i < 50; i++){
                 produtos[i][1] = produtos[i][1] + StoreVendas[numeroVenda][i+1]; //volta a adicionar as quantidades retiradas ao stock
+            }
+            for (int i = 0; i < 51; i++){
                 StoreVendas[numeroVenda][i] = 0; //poe a linha da coluna a 0
+            }
+            for (int i=0; i < 4; i++){
                 InfoVendas[numeroVenda][i] = 0;
             }
             break;
@@ -242,6 +258,7 @@ void MenuVendas (double **produtos, string *nomeProdutos, int **ClienteInt, stri
 
 double Vendas (double **produtos, string *nomeProdutos, int **StoreVendas, int numeroVenda){
 
+    system("cls");
     double subtotal = 0;
     int choice = 99, quantidade, tamanho = 0;
 
@@ -256,33 +273,36 @@ double Vendas (double **produtos, string *nomeProdutos, int **StoreVendas, int n
     }
 
     while (choice != 0){
-        printMenuCompras(produtos, nomeProdutos, size);
-        cout << "0. Exit" << endl;
-        cout << "Escolha uma opcao: ";
+        printMenuCompras(produtos, nomeProdutos, tamanho, size, subtotal, numeroVenda, StoreVendas);
         cin >> choice;
 
         while (cin.fail()){
-            cout << "Selecione uma opcao valida" << endl;
             cin.clear();
             cin.ignore(256, '\n');
+            printMenuCompras(produtos, nomeProdutos, tamanho, size, subtotal, numeroVenda, StoreVendas);
+            cout << setposx(1) << setposy(tamanho+10 ) << "Selecione uma opcao valida" << endl;
             cin >> choice;
+            cout << setposx(0) << setposy(tamanho+11) << "            ";
         }
         if (choice == 0){
             break;
         }
 
         if (choice <= tamanho && choice > 0){
-            cout << "Introduza a Quantidade " << endl;
+            system("cls");
+            printMenuCompras(produtos, nomeProdutos, tamanho, size, subtotal, numeroVenda, StoreVendas);
+            cout << setposx (1) << setposy (tamanho + 10) << "Introduza a Quantidade " << endl;
             cin >> quantidade;
+            cout << setposx (1) << setposy (tamanho+ 10) << "                           ";
+            cout << setposx (0) << setposy (tamanho+11) << "          ";
                 if (quantidade > produtos[choice - 1][1]){
-                    cout << "Quantidade indisponivel" << endl;
+                    cout << setposx (1) << setposy (tamanho+10) << "Quantidade indisponivel" << endl;
                     quantidade = 0;
                 }
             subtotal = subtotal + (quantidade * produtos[choice-1][2]);// calcula o valor subtotal (sem iva e sem lucro)
             StoreVendas[numeroVenda][choice] = StoreVendas[numeroVenda][choice] + quantidade; // guarda o index no index do produto a quantidade vendida
             produtos[choice-1][1] = (produtos[choice -1][1] - quantidade); //remove a quantidade escolhida do stock
         }
-        cout << "total c/Iva: " << ceil(((subtotal + (subtotal * 0.3)) + (subtotal * 0.23))*100.0) / 100.0 << endl; //arrendondar a 2 decimais ceil(valor * 100.0) / 100.0
     }
     return subtotal;
 }
@@ -291,9 +311,10 @@ void InserirNumeroCliente(int **ClienteInt, string **ClienteString, double **Inf
 
     int escolha;
 
-    cout << "Pretende Adicionar Numero de Cliente?" << endl
-         << "1. Sim" << endl
-         << "2. Nao, Prosseguir com checkout" << endl;
+    cout << setposx (1) << setposy (25) << "Pretende Adicionar Numero de Cliente?" << endl
+         << setposx (1) << "1. Sim" << endl
+         << setposx (1) <<"2. Nao, Prosseguir com checkout" << endl
+         << setposx (0) << setposy (0);
     cin >> escolha;
 
     if (escolha == 1){
@@ -633,10 +654,6 @@ void CriarCliente(int **ClienteInt, string **ClienteString)
     if (resposta == 1)
     {
         CriarCliente(ClienteInt, ClienteString);
-    }
-    else
-    {
-        Clientes(ClienteInt, ClienteString);
     }
 }
 
@@ -1019,13 +1036,42 @@ void printMainMenu(){
         cout << setposx (middleX-9) << setposy (25) << "insira uma opcao:" << setposx (middleX+9) << setposy (25);
 }
 
-void printMenuCompras(double **produtos, string *nomeProdutos, int size[]){
-    
-    system ("cls");
+void printMenuCompras(double **produtos, string *nomeProdutos, int tamanho, int size[], double subtotal, int numeroVenda, int **StoreVendas){
+    cout 
+        << setposx (3) << setposy(1) << "Produtos: "
+        << setposx (0) << setposy (2)  //estava a 12
+        <<".------------------------------------------------------------." << endl;
+    for (int i = 0; i <= tamanho + 1; i++){
+        cout <<"|                                                            |" << endl;
+    }
+        cout <<"'------------------------------------------------------------'" << endl;
 
-        for (int i = 0; i < 50; i++){
-            if (size[i] != 0) {
-            cout << i + 1 << ". " << nomeProdutos[i] << " stock: " << produtos[i][1] << " preco " << produtos[i][2] + (produtos[i][2] * 0.30) << endl; 
+    for (int i = 0; i < 50; i++){
+        if (size[i] != 0) {
+        cout << setposx (1) << setposy (i+3) << i + 1 << ". " << setposx (4) << nomeProdutos[i] << setposx (18) <<"| stock: " << produtos[i][1] << setposx (36) <<"| preco " << setposx (46) << ceil((produtos[i][2] + (produtos[i][2] * 0.30))*100.0) / 100.0 << endl; 
+        }
+        cout << setposx (1) << setposy (tamanho + 4) << "0. Checkout" << endl;
+        cout << setposx (1) << setposy (tamanho + 3) << "------------------------------------------------------------" << endl;
+        cout << setposx (1) << setposy (tamanho + 6) << "Escolha uma opcao: ";
+    }   
+
+        cout
+         <<setposx (73) << setposy (1) << "Carrinho: ";
+
+        cout
+        <<setposx (70) << setposy (2)  //estava a 12
+                                                         <<".------------------------------------------------." << endl;
+        for (int i = 0; i <= tamanho + 2; i++){
+            cout << setposx (70) << setposy (i+3)       << "|                                                |" << endl;
+        }
+            cout << setposx (70) << setposy (tamanho+6) << "'------------------------------------------------'" << endl;
+            
+        for (int i = 1; i<= tamanho; i++){
+            if (StoreVendas[numeroVenda][i] != 0){
+                cout << setposx (71) << setposy (i+3) << nomeProdutos [i-1] << "..........Quantidade: " << StoreVendas[numeroVenda][i];
             }
-        }   
-}
+        }
+        cout << setposx (71) << setposy (tamanho +5) << "total c/Iva: " << ceil(((subtotal + (subtotal * 0.3)) + (subtotal * 0.23))*100.0) / 100.0 << endl; //arrendondar a 2 decimais ceil(valor * 100.0) / 100.0
+        cout << setposx (20) << setposy (tamanho +4); 
+
+    }
