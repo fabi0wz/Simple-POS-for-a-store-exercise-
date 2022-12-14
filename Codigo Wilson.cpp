@@ -147,3 +147,73 @@ int main()
     }
     return 0;
 }
+
+
+////////////////////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+void Relatorios(double** produtos, string* nomeProdutos, int** ClienteInt, string** ClienteString, int** StoreVendas)
+{
+    int optionRelatorio,totalVendas = 0, vectorSomaQtdProduto[51];
+    cout << "********** Relatorios **********" << endl;
+    cout << "1.Relatorio total de venda" << endl;
+    cout << "2.Relatorio de venda por produtos" << endl;
+    cout << "3.Relatorio total de stock" << endl;
+    cout << "********************************" << endl;
+    cout << "OPCAO (relatorio) : ";
+    cin >> optionRelatorio;
+    switch (optionRelatorio)
+    {
+    case 1:
+        system("cls");
+        cout << "********** Relatorio total de venda **********" << endl;
+        for (int i = 1; i < 100; i++)
+        {
+            for (int j = 1; j < 51; j++)
+            {   // somar os valores da matriz StoreVendas 
+                if (StoreVendas[i][j] > 0) {
+                    totalVendas += StoreVendas[i][j];
+                }
+            }
+        }
+        cout << "Total de produtos vendidos : " << totalVendas << endl;
+        cout << "***********************************************" << endl;
+        break;
+    case 2:
+        /*usei o vectorSomaQtdProduto[51] para somar todas as quantidades de um produto 
+        em diversas vendas dentro da matriz StoreVendas*/
+        system("cls");
+        cout << "********** Relatorio de venda por produtos **********" << endl;
+        for (int i = 1; i < 51; i++)
+        {   
+            int SomaQtdProduto = 0;
+            for (int j = 1; j < 100; j++)
+            {
+                if (StoreVendas[j][i] > 0 ) {
+                    SomaQtdProduto += StoreVendas[j][i];
+                    //vectorSomaQtdProduto[i - 1] = SomaQtdProduto; ativar se (A)  nao funcionar
+                }
+            }
+            /*(A) - Para que o vetor apenas guarde o valor final da soma de cada coluna corespondente
+            ao total de venda de cada produto */
+            vectorSomaQtdProduto[i - 1] = SomaQtdProduto;
+        }
+        cout << "*************************************************" << endl;
+        break;
+    case 3:
+        /* usei o 4 por ser o tamanho atual da matriz produtos, no futuro pretendo usar uma variavel "size"
+        para tornar dinamico o print da matriz produto*/
+        system("cls");
+        cout << "3.Relatorio total de stock" << endl;
+        for (int h = 0; h < 4; h++) {
+            for (int g = 0; g < 4; g++) {
+                if (produtos[h][g] > 0 ) {
+                    cout << produtos[h][g] << "  ";
+                }
+            }
+            cout << endl;
+            }
+        break;
+    default:
+        break;
+    }
+}

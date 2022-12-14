@@ -49,7 +49,7 @@ void AdicionarStock(double **produtos, string *nomeProdutos);
 void EliminarArtigo(double **produtos, string *nomeProdutos);
 
 //? Zona Relatorios
-void Relatorios(double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString);
+void Relatorios(double** produtos, string* nomeProdutos, int** ClienteInt, string** ClienteString, int** StoreVendas);
 
 //? Zona Clientes
 void Clientes(int **ClienteInt, string **ClienteString);
@@ -171,7 +171,7 @@ void MainMenu(double **produtos, string *nomeProdutos, int **ClienteInt, string 
         break;
     case RELATORIOS:
         system("cls");
-        Relatorios(produtos, nomeProdutos, ClienteInt, ClienteString);
+        Relatorios(produtos, nomeProdutos, ClienteInt, ClienteString, StoreVendas);
         MainMenu(produtos, nomeProdutos, ClienteInt, ClienteString, StoreVendas, InfoVendas);
         break;
     case CLIENTES:
@@ -223,16 +223,9 @@ void MenuVendas (double **produtos, string *nomeProdutos, int **ClienteInt, stri
         InserirNumeroCliente(ClienteInt, ClienteString, InfoVendas, numeroVenda); //adicionar numero cliente na fatura
         
         system ("cls");
-        int escolha, tamanho =0;
-
-        for (int i = 0; i<50; i++){
-            if (produtos[i][0] != 0){
-                tamanho++; //tamanho das escolhas 1 a x
-            }
-        }
-    
-        cout << setposx (1) << setposy(tamanho + 18) << "1. Checkout" << endl
-             << setposx (1) << setposy(tamanho + 19) << "2. Cancelar Venda" << endl;
+        int escolha;
+        cout << setposx (1) << setposy(0) << "1. Checkout" << endl
+             << setposx (1) << setposy(1) << "2. Cancelar Venda" << endl;
         cin >> escolha;
 
         switch (escolha){
@@ -302,6 +295,7 @@ double Vendas (double **produtos, string *nomeProdutos, int **StoreVendas, int n
             subtotal = subtotal + (quantidade * produtos[choice-1][2]);// calcula o valor subtotal (sem iva e sem lucro)
             StoreVendas[numeroVenda][choice] = StoreVendas[numeroVenda][choice] + quantidade; // guarda o index no index do produto a quantidade vendida
             produtos[choice-1][1] = (produtos[choice -1][1] - quantidade); //remove a quantidade escolhida do stock
+            produtos[choice-1][3] = produtos[choice-1][3]+quantidade;
         }
     }
     return subtotal;
@@ -313,8 +307,7 @@ void InserirNumeroCliente(int **ClienteInt, string **ClienteString, double **Inf
 
     cout << setposx (1) << setposy (25) << "Pretende Adicionar Numero de Cliente?" << endl
          << setposx (1) << "1. Sim" << endl
-         << setposx (1) <<"2. Nao, Prosseguir com checkout" << endl
-         << setposx (0) << setposy (0);
+         << setposx (1) <<"2. Nao, Prosseguir com checkout" << endl;
     cin >> escolha;
 
     if (escolha == 1){
@@ -555,6 +548,7 @@ void EliminarArtigo(double **produtos, string *nomeProdutos)
                     produtos[i][0] = 0;
                     produtos[i][1] = 0;
                     produtos[i][2] = 0;
+                    produtos[i][3] = 0;
                 }
                 else if (resposta == 2)
                 {
@@ -580,14 +574,90 @@ void EliminarArtigo(double **produtos, string *nomeProdutos)
 }
 
 //! Opcao Relatorios no Menu
-void Relatorios(double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString)
+void Relatorios(double** produtos, string* nomeProdutos, int** ClienteInt, string** ClienteString, int** StoreVendas)
 {
-    int escolha;
-    cout << "Que Operacao Pretende Realizar? \n";
-    cout << "1.Criar Relatorio \n";
-    cout << "2.Relatorio por Produto \n";
-    cout << "3.Relatorio Total \n";
-    cin >> escolha;
+    int optionRelatorio, vectorSomaQtdProduto[51];
+    int numeroVendasmaior = -1, maisVendido, numeroVendasmenor = 999, menosVendido;
+
+    for (int i = 0; i < 50; i++){
+        if (produtos[i][3] > numeroVendasmaior){ //se a quantidade de vendas no vetor for maior que a quantidade de vendas guardada na variavel
+            cout << "entrou aqui em " << i << endl;
+            numeroVendasmaior = produtos[i][3]; //a quantidade de vendas passar a ser essa a maior
+            maisVendido = i; //e guarda a index desse produto
+        }
+        if (produtos[i][3] < numeroVendasmenor){
+            cout << "entrou aqui 2 em " << i << endl;
+            numeroVendasmenor = produtos[i][3];
+            menosVendido = i;
+        }
+    }
+
+            cout << "O mais vendido e " << nomeProdutos[maisVendido] << "\n o Menos vendido e " << nomeProdutos[menosVendido] << endl;
+    /*
+    para fazer a parte do maior lucro fazer o preco do produto * 0,30 ---> ter o valor do lucro, e multiplicar pelo numero de vendas de cada produto, assim vai
+    dar o que deu mais lucro*/
+
+    cout << "********** Relatorios **********" << endl;
+    cout << "1.Relatorio total de venda" << endl;
+    cout << "2.Relatorio de venda por produtos" << endl;
+    cout << "3.Relatorio total de stock" << endl;
+    cout << "********************************" << endl;
+    cout << "OPCAO (relatorio) : ";
+    cin >> optionRelatorio;
+
+    switch (optionRelatorio){
+
+    case 1:
+
+        system("cls");
+        cout << "********** Relatorio total de venda **********" << endl;
+        cout << "O mais vendido e " << nomeProdutos[maisVendido] << "\n o Menos vendido e " << nomeProdutos[menosVendido] << endl;
+        //produto mais vendido, produto menos vendido, produto com mais lucro, cliente que mais comprou
+        cout << "***********************************************" << endl;
+        system("pause");
+        break;
+
+    case 2:
+        /*usei o vectorSomaQtdProduto[51] para somar todas as quantidades de um produto 
+        em diversas vendas dentro da matriz StoreVendas*/
+        system("cls");
+        cout << "********** Relatorio de venda por produtos **********" << endl;
+        for (int i = 1; i < 51; i++)
+        {   
+            int SomaQtdProduto = 0;
+            for (int j = 1; j < 100; j++)
+            {
+                if (StoreVendas[j][i] > 0 ) {
+                    SomaQtdProduto += StoreVendas[j][i];
+                    //vectorSomaQtdProduto[i - 1] = SomaQtdProduto; ativar se (A)  nao funcionar
+                }
+            }
+            /*(A) - Para que o vetor apenas guarde o valor final da soma de cada coluna corespondente
+            ao total de venda de cada produto */
+            vectorSomaQtdProduto[i - 1] = SomaQtdProduto;
+        }
+        cout << "*************************************************" << endl;
+        system("pause");
+        break;
+
+    case 3:
+        /* usei o 4 por ser o tamanho atual da matriz produtos, no futuro pretendo usar uma variavel "size"
+        para tornar dinamico o print da matriz produto*/
+        system("cls");
+        cout << "3.Relatorio total de stock" << endl;
+        for (int h = 0; h < 4; h++) {
+            for (int g = 0; g < 4; g++) {
+                if (produtos[h][g] > 0 ) {
+                    cout << produtos[h][g] << "  ";
+                }
+            }
+            cout << endl;
+            }
+            system("pause");
+        break;
+    default:
+        break;
+    }
 }
 
 
@@ -863,25 +933,28 @@ int Verificador(int aux){
 }
 
 void PreencherParaTeste (double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString) {
-    produtos[0][0] = 125;
-    produtos[0][1] = 5;
-    produtos[0][2] = 19.99;
-    produtos[1][0] = 126;
-    produtos[1][1] = 12;
-    produtos[1][2] = 4.99;
-    produtos[2][0] = 127;
-    produtos[2][1] = 26;
-    produtos[2][2] = 12.50;
-    produtos[3][0] = 128;
-    produtos[3][1] = 2;
-    produtos[3][2] = 1.99;
-    produtos[4][0] = 129;
-    produtos[4][1] = 50;
-    produtos[4][2] = 3.99;
-    nomeProdutos[0] = "Mesa";
-    nomeProdutos[1] = "Cadeira";
-    nomeProdutos[2] = "Candeeiro";
-    nomeProdutos[3] = "Janela";
+    produtos[0][0] = 001; //produto 1
+    produtos[0][1] = 12; // stock
+    produtos[0][2] = 19.99; // preco
+    produtos[0][3] = 5;
+    produtos[1][0] = 002; //produto 2
+    produtos[1][1] = 16; //stock 2
+    produtos[1][2] = 4.99; //preco 2
+    produtos[1][3] = 2;
+    produtos[2][0] = 003; // produto 3
+    produtos[2][1] = 26; //stock 3
+    produtos[2][2] = 12.50; // preco 3
+    produtos[2][3] = 14;
+    produtos[3][0] = 004; //produto 4
+    produtos[3][1] = 8; //stock 4
+    produtos[3][2] = 89.99; //preco 4
+    produtos[4][0] = 005; //produto 5
+    produtos[4][1] = 50; //stock 5
+    produtos[4][2] = 3.99; //preco 5
+    nomeProdutos[0] = "Monitor";
+    nomeProdutos[1] = "Rato";
+    nomeProdutos[2] = "Teclado";
+    nomeProdutos[3] = "Cadeira";
     nomeProdutos[4] = "Tartaruga";
 
     ClienteInt[0][0] = 0001;
@@ -1029,11 +1102,11 @@ void printMainMenu(){
 
         cout
          << endl
-         <<setposx ((middleX-14)) << setposy (24)  //estava a 12
+         <<setposx ((middleX-15)) << setposy (24)  //estava a 12
                                   <<".--------------------------." << endl
-         <<setposx ((middleX-14)) <<"|                          |" << endl
-         <<setposx ((middleX-14)) <<"'--------------------------'";
-        cout << setposx (middleX-9) << setposy (25) << "insira uma opcao:" << setposx (middleX+9) << setposy (25);
+         <<setposx ((middleX-15)) <<"|                          |" << endl
+         <<setposx ((middleX-15)) <<"'--------------------------'";
+        cout << setposx (middleX-10) << setposy (25) << "insira uma opcao:" << setposx (middleX+8) << setposy (25);
 }
 
 void printMenuCompras(double **produtos, string *nomeProdutos, int tamanho, int size[], double subtotal, int numeroVenda, int **StoreVendas){
