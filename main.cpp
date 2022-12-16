@@ -10,7 +10,7 @@ using namespace conmanip;
 console_out_context ctxout;
 //cria um objeto consola
 console_out conout(ctxout);
-int middleX = conout.getsize().X/2; //! cria o middle do ecra 
+int middle = conout.getsize().X/2; //! cria o middle do ecra 
 int middleY = conout.getsize().Y/2;
 //?fim
 
@@ -29,6 +29,8 @@ void welcome();
 void PrintLojinha();
 void printMainMenu();
 void printMenuCompras(double **produtos, string *nomeProdutos, int tamanho, int size[], double subtotal, int numeroVenda, int **StoreVendas);
+void printCriarCliente(int **ClienteInt, string **ClienteString);
+void printEliminarCliente();
 
 
 void WelcomeMenu(double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString, int **StoreVendas, double **InfoVendas);
@@ -224,9 +226,11 @@ void MenuVendas (double **produtos, string *nomeProdutos, int **ClienteInt, stri
         
         system ("cls");
         int escolha;
-        cout << setposx (1) << setposy(0) << "1. Checkout" << endl
-             << setposx (1) << setposy(1) << "2. Cancelar Venda" << endl;
-        cin >> escolha;
+
+        cout << setposx (middle - 9) << setposy (8) << "**Checkout**" << endl
+             << setposx (middle - 9) << "1. Checkout" << endl
+             << setposx (middle - 9) << "2. Cancelar Venda" << endl;
+        cin >> setposx (middle - 9) >> setposy (13) >> escolha;
 
         switch (escolha){
         case 1:
@@ -235,6 +239,8 @@ void MenuVendas (double **produtos, string *nomeProdutos, int **ClienteInt, stri
             break;
         
         case 2:
+
+            cout << setposx (middle - 9 ) << setposy (13) << "Venda Cancelada" << endl;
             for (int i = 0; i < 50; i++){
                 produtos[i][1] = produtos[i][1] + StoreVendas[numeroVenda][i+1]; //volta a adicionar as quantidades retiradas ao stock
             }
@@ -244,6 +250,8 @@ void MenuVendas (double **produtos, string *nomeProdutos, int **ClienteInt, stri
             for (int i=0; i < 4; i++){
                 InfoVendas[numeroVenda][i] = 0;
             }
+            cout << setposx (middle - 16) << setposy (25);
+            system("pause");
             break;
         }
     }
@@ -305,16 +313,17 @@ void InserirNumeroCliente(int **ClienteInt, string **ClienteString, double **Inf
 
     int escolha;
 
-    cout << setposx (1) << setposy (25) << "Pretende Adicionar Numero de Cliente?" << endl
-         << setposx (1) << "1. Sim" << endl
-         << setposx (1) <<"2. Nao, Prosseguir com checkout" << endl;
+    cout << setposx (middle - 19) << setposy (15) << "Pretende Adicionar Numero de Cliente?" << endl
+         << setposx (middle -19) << "1. Sim" << endl
+         << setposx (middle - 19) <<"2. Nao, Prosseguir com checkout" << endl;
     cin >> escolha;
 
     if (escolha == 1){
-
+        
+        system("cls");
         int numCliente;
-        cout << "Insira numero do cliente" << endl;
-        cin >> numCliente;
+        cout << setposx (middle -12) << "Insira numero do cliente" << endl;
+        cin >> setposx(middle-12) >> numCliente;
 
         for (int i = 0; i < 50; i++){
             if (numCliente == ClienteInt[i][0]){
@@ -700,30 +709,51 @@ void CriarCliente(int **ClienteInt, string **ClienteString)
     int resposta;
     system("cls");
 
+    printCriarCliente(ClienteInt,ClienteString);
     for (int i = 0; i < 50; i++)
     {
         if (ClienteInt[i][0] == 0)
         {
-            cout << "Insira o ID do Cliente" << endl;
-            cin >> ClienteInt[i][0];
-            cout << "Insira o Nome do Cliente" << endl;
+            if (i == 0) {
+                ClienteInt[i][0] = 1;
+                cout << setposx (middle-2) << setposy (8) << ClienteInt[i][0] << endl; // insere automaticamente o ID do user
+            }
+            else {
+                ClienteInt[i][0] = ClienteInt[i-1][0] + 1;
+                cout << setposx (middle-2) << setposy (8) << ClienteInt[i][0] << endl; // insere automaticamente o ID do user
+            }
+            cout << setposx (middle) << setposy(9);
             cin.ignore();
-            getline(cin, ClienteString[i][0]);
-            cout << "Insira o Contacto do Cliente" << endl;
-            cin >> ClienteInt[i][1];
-            cout << "Insira a Morada do Cliente" << endl;
+            getline (cin, ClienteString[i][0]); // Escreve nome do cliente a frente do texto "Nome Cliente:"
+            cin >> setposx (middle - 4) >> setposy(10) >> ClienteInt[i][1]; //Insere o Contacto do utilizador a frente do texto "contacto:"
+            cout << setposx (middle-6) << setposy(11);
             cin.ignore();
             getline(cin, ClienteString[i][1]);
             break;
         }
     }
-    cout << "Pretende adicionar mais Clientes?" << endl;
-    cout << "1. Sim" << endl;
-    cout << "2. Nao" << endl;
+    cout << "\n\n\n\n\n" << setposx (middle-16) << "Pretende adicionar mais Clientes?" << endl;
+    cout << setposx (middle-16) << "1. Sim" << endl;
+    cout << setposx (middle-16) << "2. Nao\n\n";
+
+    cout
+    << endl
+    <<setposx ((middle-15)) << setposy (24)  //estava a 12
+                            <<".--------------------------." << endl
+    <<setposx ((middle-15)) <<"|                          |" << endl
+    <<setposx ((middle-15)) <<"'--------------------------'";
+    cout << setposx (middle-10) << setposy (25) << "insira uma opcao:" << setposx (middle+8) << setposy (25);
+
+
     cin >> resposta;
+   
     if (resposta == 1)
     {
         CriarCliente(ClienteInt, ClienteString);
+    }
+
+    else{
+        system("cls");
     }
 }
 
@@ -732,9 +762,13 @@ void EliminarCliente(int **ClienteInt, string **ClienteString)
 {
 
     int resposta;
-    cout << "Insira o codigo do cliente que pretende eliminar \n";
-    cout << "Ou insira 0 para voltar ao menu anterior\n";
+    printEliminarCliente();
     cin >> resposta;
+
+    if (resposta == 0){
+        system("cls");
+        return;
+    }
 
     for (int i = 0; i < 50; i++)
     {
@@ -742,22 +776,34 @@ void EliminarCliente(int **ClienteInt, string **ClienteString)
         {
             if (ClienteInt[i][0] != 0)
             {
-                cout << "Deseja Eliminar " << ClienteInt[i][0] << " | " << ClienteString[i][0] << " ?\n";
-                cout << "1. Sim \n2. Nao \n";
-                cin >> resposta;
+                    system("cls");
+                    cout
+                    << endl
+                    <<setposx ((middle - 15)) << setposy (10)
+                                            <<".--------------------------------------." << endl
+                    <<setposx ((middle - 15)) <<"|                                      |" << endl
+                    <<setposx ((middle - 15)) <<"|                                      |" << endl
+                    <<setposx ((middle - 15)) <<"|                                      |" << endl
+                    <<setposx ((middle - 15)) <<"'--------------------------------------'";
+                    cout << setposx (middle- 13) << setposy (9) << "Deseja Eliminar:" << setposx (middle+8) << setposy (25);
+                    cout << setposx (middle- 13) << setposy (11) << ClienteInt[i][0] << " | " << ClienteString[i][0] << " ?";
+                    cout << setposx (middle - 13) << setposy (12) << "1. Sim  2. Nao";
+                    cin >> setposx(middle - 13) >> setposy (13) >> resposta;
                 if (resposta == 1)
                 {
                     ClienteInt[i][0] = 0;
                     ClienteInt[i][1] = 0;
                     ClienteString[i][0] = "";
-                    ClienteString[i][0] = "";
+                    ClienteString[i][1] = "";
                 }
                 else if (resposta == 2)
                 {
+                    system("cls");
                     EliminarCliente(ClienteInt, ClienteString);
                 }
                 else if (resposta == 0)
                 {
+                    system("cls");
                     Clientes(ClienteInt, ClienteString);
                 }
                 else if (resposta > 2 || resposta < 0)
@@ -894,7 +940,7 @@ int Verificador(int aux){
                 if ((!cin || escolha < 1 || escolha > 4) && escolha != 99){
                     cin.clear();
                     cin.ignore(256, '\n');
-                    cout << setposx (middleX-12) << setposy (23) << "insira uma opcao valida:" <<  setposx (middleX+9) << setposy (25);
+                    cout << setposx (middle-12) << setposy (23) << "insira uma opcao valida:" <<  setposx (middle+9) << setposy (25);
                     printMainMenu();
                 }
             } 
@@ -978,10 +1024,9 @@ void PreencherParaTeste (double **produtos, string *nomeProdutos, int **ClienteI
 }
 
 void printTime(){
-    //! imprimir o tempo atual na fatura
-    time_t my_time = time(NULL);
-    //! ctime converte o time_t para um string
-    cout << ctime(&my_time);
+time_t tim = time(0);
+        tm* gottime = gmtime(&tim);
+        cout << gottime->tm_mday << gottime->tm_yday; 
 }
 
 
@@ -1082,31 +1127,31 @@ void printMainMenu(){
 
         cout
          << endl
-         <<setposx ((middleX-12)) << setposy (7)  //estava a 12
+         <<setposx ((middle-12)) << setposy (7)  //estava a 12
                                   <<".-----------------." << endl
-         <<setposx ((middleX-12)) <<"|                 |" << endl
-         <<setposx ((middleX-12)) <<"|                 |" << endl
-         <<setposx ((middleX-12)) <<"|                 |" << endl
-         <<setposx ((middleX-12)) <<"|                 |"<< endl
-         <<setposx ((middleX-12)) <<"'-----------------'"<< endl;
+         <<setposx ((middle-12)) <<"|                 |" << endl
+         <<setposx ((middle-12)) <<"|                 |" << endl
+         <<setposx ((middle-12)) <<"|                 |" << endl
+         <<setposx ((middle-12)) <<"|                 |"<< endl
+         <<setposx ((middle-12)) <<"'-----------------'"<< endl;
 
         int escolha;
         const int VENDAS = 1, STOCK = 2, RELATORIOS = 3, CLIENTES = 4;
-        cout << setposx (middleX-5) << setposy (6) << "MENU";
-        cout << setposx (middleX-9) << setposy (8) << "1. Vendas";
-        cout << setposx (middleX-9) << setposy (9) << "2. Stock";
-        cout << setposx (middleX-9) << setposy (10) << "3. Relatorios";
-        cout << setposx (middleX-9) << setposy (11) << "4. Clientes";
+        cout << setposx (middle-5) << setposy (6) << "MENU";
+        cout << setposx (middle-9) << setposy (8) << "1. Vendas";
+        cout << setposx (middle-9) << setposy (9) << "2. Stock";
+        cout << setposx (middle-9) << setposy (10) << "3. Relatorios";
+        cout << setposx (middle-9) << setposy (11) << "4. Clientes";
 
 
 
         cout
          << endl
-         <<setposx ((middleX-15)) << setposy (24)  //estava a 12
+         <<setposx ((middle-15)) << setposy (24)  //estava a 12
                                   <<".--------------------------." << endl
-         <<setposx ((middleX-15)) <<"|                          |" << endl
-         <<setposx ((middleX-15)) <<"'--------------------------'";
-        cout << setposx (middleX-10) << setposy (25) << "insira uma opcao:" << setposx (middleX+8) << setposy (25);
+         <<setposx ((middle-15)) <<"|                          |" << endl
+         <<setposx ((middle-15)) <<"'--------------------------'";
+        cout << setposx (middle-10) << setposy (25) << "insira uma opcao:" << setposx (middle+8) << setposy (25);
 }
 
 void printMenuCompras(double **produtos, string *nomeProdutos, int tamanho, int size[], double subtotal, int numeroVenda, int **StoreVendas){
@@ -1148,3 +1193,43 @@ void printMenuCompras(double **produtos, string *nomeProdutos, int tamanho, int 
         cout << setposx (20) << setposy (tamanho +4); 
 
     }
+
+
+void printCriarCliente(int **ClienteInt, string **ClienteString){
+
+    cout
+    << endl
+    <<setposx ((middle-16)) << setposy (7)  //estava a 12
+                            <<".--------------------------------." << endl
+    <<setposx ((middle-16)) <<"|                                |" << endl
+    <<setposx ((middle-16)) <<"|                                |" << endl
+    <<setposx ((middle-16)) <<"|                                |" << endl
+    <<setposx ((middle-16)) <<"|                                |" << endl
+    <<setposx ((middle-16)) <<"'--------------------------------'" << endl;
+
+    int escolha;
+    const int VENDAS = 1, STOCK = 2, RELATORIOS = 3, CLIENTES = 4;
+    cout << setposx (middle-14) << setposy (6) << "Novo Cliente";
+    cout << setposx (middle-14) << setposy (8) << "ID Cliente:";
+    cout << setposx (middle-14) << setposy (9) << "Nome Cliente:";
+    cout << setposx (middle-14) << setposy (10) << "Contacto:";
+    cout << setposx (middle-14) << setposy (11) << "Morada:";
+
+}
+
+void printEliminarCliente(){
+
+    cout
+    << endl
+    <<setposx ((middle-15)) << setposy (10)  //estava a 12
+                            <<".---------------------------------------------------." << endl
+    <<setposx ((middle-15)) <<"|                                                   |" << endl
+    <<setposx ((middle-15)) <<"|                                                   |" << endl
+    <<setposx ((middle-15)) <<"|                                                   |" << endl
+    <<setposx ((middle-15)) <<"|                                                   |" << endl
+    <<setposx ((middle-15)) <<"'---------------------------------------------------'";
+    cout << setposx (middle-13) << setposy (11) << "Insira o Codigo do Cliente que pretende Eliminar" << setposx (middle+8) << setposy (25);
+    cout << setposx (middle-13) << setposy (12) << "0. Voltar ao menu anterior" << setposx (middle+8) << setposy (25);
+    cout << setposx (middle-13) << setposy (14) << "Insira uma opcao: " << setposx (middle + 5);
+
+}
