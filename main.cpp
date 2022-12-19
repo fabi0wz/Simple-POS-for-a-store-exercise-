@@ -10,6 +10,9 @@ using namespace conmanip;
 console_out_context ctxout;
 //cria um objeto consola
 console_out conout(ctxout);
+
+int FaturaDaSorte = rand() % 100 +1; //ao executar um programa escolhe um numero entre 1 e 100 para ser a fatura da sorte
+
 int middle = conout.getsize().X/2; //! cria o middle do ecra 
 int middleY = conout.getsize().Y/2;
 //?fim
@@ -27,19 +30,18 @@ void printFatura(double **produtos, string *nomeProdutos, int **ClienteInt, stri
 //?imprimir menus
 void welcome();
 void PrintLojinha();
-void printMainMenu();
-void printMenuCompras(double **produtos, string *nomeProdutos, int tamanho, int size[], double subtotal, int numeroVenda, int **StoreVendas);
-void printCriarCliente(int **ClienteInt, string **ClienteString);
-void printEliminarCliente();
+
 
 
 void WelcomeMenu(double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString, int **StoreVendas, double **InfoVendas);
+void printMainMenu();
 void MainMenu(double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString, int **StoreVendas, double **InfoVendas);
 
 //void MainMenuFuncionario (double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString);
 //? Zona Vendas
 void MenuVendas (double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString, int **StoreVendas, double **InfoVendas);
 double Vendas(double **produtos, string *nomeProdutos, int **StoreVendas, int numeroVenda);
+void printMenuCompras(double **produtos, string *nomeProdutos, int tamanho, int size[], double subtotal, int numeroVenda, int **StoreVendas);
 void InserirNumeroCliente(int **ClienteInt, string **ClienteString, double **InfoVendas, int numeroVenda);
 void Checkout (double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString, int **StoreVendas, double **InfoVendas, int numeroVenda, double total);
 void printFatura (double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString, int **StoreVendas, double **InfoVendas, int numeroVenda);
@@ -47,20 +49,29 @@ void printFatura (double **produtos, string *nomeProdutos, int **ClienteInt, str
 //? Zona Stocks/Produtos
 void Stock(double **produtos, string *nomeProdutos);
 void CriarArtigo(double **produtos, string *nomeProdutos);
+void printCriarArtigo(double **produtos, string *nomeProdutos);
+string CompararArtigos(string *nomeProdutos, int i);
 void AdicionarStock(double **produtos, string *nomeProdutos);
+void printAdicionarStock(double **produtos, string *nomeProdutos, int tamanho, int size[]);
 void EliminarArtigo(double **produtos, string *nomeProdutos);
+void printEliminarArtigo(double **produtos, string *nomeProdutos, int tamanho, int size[]);
 
 //? Zona Relatorios
-void Relatorios(double** produtos, string* nomeProdutos, int** ClienteInt, string** ClienteString, int** StoreVendas);
+void Relatorios(double** produtos, string* nomeProdutos, int** ClienteInt, string** ClienteString, int** StoreVendas, double **InfoVendas);
+void RelatorioVendas(double** produtos, string* nomeProdutos, int** ClienteInt, string** ClienteString, int** StoreVendas);
+void RelatorioVendasPCliente (double** produtos, string* nomeProdutos, int** ClienteInt, string** ClienteString, int** StoreVendas, double **InfoVendas);
 
 //? Zona Clientes
 void Clientes(int **ClienteInt, string **ClienteString);
 void CriarCliente(int **ClienteInt, string **ClienteString);
+void printCriarCliente(int **ClienteInt, string **ClienteString);
 void EliminarCliente(int **ClienteInt, string **ClienteString);
+void printEliminarCliente(int **ClienteInt, string **ClienteString, int tamanho, int size[]);
 void AlterarNome(int **ClienteInt, string **ClienteString);
+void printAlterarNome(int **ClienteInt, string **ClienteString, int tamanho, int size[]);
 
 //!Preencher o os stocks/clientes para testes
-void PreencherParaTeste (double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString);
+void PreencherDados (double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString);
 
 //! M A I N  M A I N  M A I N  M A I N 
 //! M A I N  M A I N  M A I N  M A I N  
@@ -142,7 +153,7 @@ int main(){
     }
 
     //Preenche os produtos e clientes com valores default //!falta adicionar o das vendas para tambem preencher com alguns valores default
-    PreencherParaTeste(produtos, nomeProdutos, ClienteInt, ClienteString);
+    PreencherDados(produtos, nomeProdutos, ClienteInt, ClienteString);
     welcome();
     MainMenu(produtos, nomeProdutos, ClienteInt, ClienteString, StoreVendas, InfoVendas);
 
@@ -173,7 +184,7 @@ void MainMenu(double **produtos, string *nomeProdutos, int **ClienteInt, string 
         break;
     case RELATORIOS:
         system("cls");
-        Relatorios(produtos, nomeProdutos, ClienteInt, ClienteString, StoreVendas);
+        Relatorios(produtos, nomeProdutos, ClienteInt, ClienteString, StoreVendas ,InfoVendas);
         MainMenu(produtos, nomeProdutos, ClienteInt, ClienteString, StoreVendas, InfoVendas);
         break;
     case CLIENTES:
@@ -327,16 +338,14 @@ void InserirNumeroCliente(int **ClienteInt, string **ClienteString, double **Inf
 
         for (int i = 0; i < 50; i++){
             if (numCliente == ClienteInt[i][0]){
-                cout << "entrou aqui";
                 InfoVendas[numeroVenda][0] = numCliente;
             }
         }
         int escolha = 99;
 
         if(InfoVendas[numeroVenda][0] == 0 ){
-            cout << "entrou aqui 2";
             while(InfoVendas[numeroVenda][0] == 0 || escolha != 0){
-                cout << "Numero de Cliente Invalido" << endl
+                cout << "\n\n\nNumero de Cliente Invalido" << endl
                     << "Pretende adicionar novo cliente?" << endl
                     << "1. Criar novo Cliente" << endl
                     << "2. Tentar novamente" << endl
@@ -348,11 +357,13 @@ void InserirNumeroCliente(int **ClienteInt, string **ClienteString, double **Inf
                     break;
                 }
                 else if (escolha == 1) {
+                    system("cls");
                     CriarCliente(ClienteInt, ClienteString);
                     InserirNumeroCliente(ClienteInt, ClienteString, InfoVendas, numeroVenda);
                     break;
                 }
                 else if (escolha == 2){
+                    system("cls");
                     InserirNumeroCliente(ClienteInt, ClienteString, InfoVendas, numeroVenda);
                     break;
                 }
@@ -371,6 +382,10 @@ void Checkout (double **produtos, string *nomeProdutos, int **ClienteInt, string
         double pagamento;
         double totalpago;
         while (total >= 0){
+            if (numeroVenda == FaturaDaSorte){ // se o numero da venda for o mesmo da fatura da sorte, o total fica a 0
+                total = 0;
+                cout << "Parabens, recebeu uma compra gratuira por ser o " << FaturaDaSorte <<" cliente :)" << endl;
+            }
             cout << "Falta Pagar " << ceil(total * 100.0) / 100.0  << endl;
             cout << "Insira valor: " << endl;
             cin >> pagamento;
@@ -385,31 +400,56 @@ void Checkout (double **produtos, string *nomeProdutos, int **ClienteInt, string
         }
         InfoVendas[numeroVenda][2] = totalpago; //guarda o valor entregue pelo cliente
         InfoVendas[numeroVenda][3] = 0; // guarda o valor dado de troco
-        cout << "Obrigado pela Compra" << endl;
         if (total < 0) {
             InfoVendas[numeroVenda][3] = ceil((total * -1)*100.0) / 100.0; // guarda o valor entregue de troco
             cout << "Troco: " << InfoVendas[numeroVenda][3] << endl;
             total = 0;
         }
     }
+    system("cls");
     printFatura(produtos, nomeProdutos, ClienteInt, ClienteString, StoreVendas, InfoVendas, numeroVenda);
 }
 
 void printFatura(double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString, int **StoreVendas, double **InfoVendas, int numeroVenda){
+    
+    int numCli;
+    for (int i =0; i<50; i++){
+        if(ClienteInt[i][0] == InfoVendas[numeroVenda][0]){
+            numCli = i;
+        }
+    }
 
-       cout <<"Numero da Fatura"<< StoreVendas[numeroVenda][0] << endl
-            <<"Numero do cliente"<< InfoVendas[numeroVenda][0] << endl;
+
+       cout << "|----------------Obrigado pela Compra--------------------|" << endl
+            << "|                                                        |" << endl
+            << "|                                                        |" << endl
+            << "| Numero da Fatura: "<< StoreVendas[numeroVenda][0] << setposx (57) << "|" << endl
+            << "| Numero do cliente: "<< ClienteInt[numCli][0] << ": " << ClienteString[numCli][0] << setposx (57) <<"|" << endl
+            << "|" << setposx(57) << "|" << endl
+            << "| Artigos:" << setposx(57) << "|" << endl
+            << "|" << setposx (57) << "|" << endl;
 
             for (int i = 1; i < 51; i++){
                 if (StoreVendas[numeroVenda][i] != 0){
-                    cout << i  << "....... " << nomeProdutos [i-1] << "..........Quantidade: " << StoreVendas[numeroVenda][i];
-                    cout << " Preco unitario: " << (produtos[i-1][2] + (produtos[i-1][2] * 0.3)) << "  Iva: " << (produtos[i-1][2] + (produtos[i-1][2] * 0.3)) * 0.23 << endl;
+                    cout << "| " << i  << ". " << nomeProdutos [i-1] << setposx(20) << "Qtd: " << StoreVendas[numeroVenda][i] << setposx(57) << "|" << endl;
+                    cout << "| Preco: " << ceil((produtos[i-1][2] + (produtos[i-1][2] * 0.3)) * 100.0)/100.0 << "  Iva: " << ceil(((produtos[i-1][2] + (produtos[i-1][2] * 0.3)) * 0.23)*100.0) /100.0 << setposx(57) << "|" << endl;
+                    cout << "|" << setposx(57) << "|" << endl;
                 }
             }
-            cout << "total: " << ceil((InfoVendas[numeroVenda][1] + (InfoVendas[numeroVenda][1] * 0.3) + (InfoVendas[numeroVenda][1] * 0.23)) * 100.0) / 100.0 << endl;
-            cout << "Valor pago " << InfoVendas[numeroVenda][2] << endl;
-            cout << "Troco: " << InfoVendas[numeroVenda][3] << endl;
+            cout << "|" << setposx(57) << "|" << endl
+                 << "|" << setposx(57) << "|" << endl
+                 << "|" << setposx(57) << "|" << endl;
+
+            cout << "| Total: " << ceil((InfoVendas[numeroVenda][1] + (InfoVendas[numeroVenda][1] * 0.3) + (InfoVendas[numeroVenda][1] * 0.23)) * 100.0) / 100.0 << setposx(57) << "|" << endl;
+            cout << "| Valor recebido: " << InfoVendas[numeroVenda][2] << setposx(57) << "|" << endl;
+            cout << "| Troco: " << InfoVendas[numeroVenda][3] << setposx(57) << "|" << endl;
+            cout << "|" << setposx(57) << "|" << endl
+                 << "|" << setposx(57) << "|" << endl;
+            cout << "| ";
             printTime();
+            cout << setposx(57) << "|" << endl;
+            cout << "|--------------------------------------------------------|" << endl;
+
     system("pause");
 }
 
@@ -447,90 +487,104 @@ void Stock(double **produtos, string *nomeProdutos)
 }
 
 //? Criar Artigos dentro do Stock
-void CriarArtigo(double **produtos, string *nomeProdutos)
-{
+void CriarArtigo(double **produtos, string *nomeProdutos){
+
+    system("cls");
+    string novoProd = "";
+    int comparar = 0;
     int resposta;
 
-    for (int i = 0; i < 50; i++)
-    {
-        if (produtos[i][0] == 0)
-        {
-            cout << "Insira o codigo do Produto" << endl;
-            cin >> produtos[i][0];
-            cout << "Insira o Nome do Produto" << endl;
-            cin.ignore();
-            getline(cin, nomeProdutos[i]);
-            cout << "Insira o Stock do Produto" << endl;
-            cin >> produtos[i][1];
-            cout << "Insira o preco custo do produto" << endl;
-            cin >> produtos[i][2];
-            break;
-        }
+    printCriarArtigo(produtos, nomeProdutos);
+    for (int i = 0; i < 50; i++){
+
+        if (produtos[i][0] == 0){
+
+            if (i == 0) {
+                produtos[i][0] = 1;
+                cout << setposx (middle-2) << setposy (8) << produtos[i][0] << endl; // insere automaticamente o ID do artigo
+            }
+            else {
+                produtos[i][0] = produtos[i-1][0] + 1;
+                cout << setposx (middle-2) << setposy (8) << produtos[i][0] << endl; // insere automaticamente o ID do artigo
+            }
+
+        cout << setposx (middle) << setposy(9);
+
+
+        nomeProdutos[i] = CompararArtigos(nomeProdutos, i); 
+    
+        cin >> setposx (middle - 4) >> setposy(10) >> produtos[i][1]; 
+        cin >> setposx (middle -1) >> setposy (11) >> produtos[i][2];            
+        break;
     }
-    cout << "Pretende adicionar mais artigos?" << endl;
-    cout << "1. Sim" << endl;
-    cout << "2. Nao" << endl;
+
+    }
+    cout << "\n\n\n\n\n" << setposx (middle-16) << "Pretende adicionar mais Produtos?" << endl;
+    cout << setposx (middle-16) << "1. Sim" << endl;
+    cout << setposx (middle-16) << "2. Nao\n\n";
+
+    cout
+    << endl
+    <<setposx ((middle-15)) << setposy (24)  //estava a 12
+                            <<".--------------------------." << endl
+    <<setposx ((middle-15)) <<"|                          |" << endl
+    <<setposx ((middle-15)) <<"'--------------------------'";
+    cout << setposx (middle-10) << setposy (25) << "insira uma opcao:" << setposx (middle+8) << setposy (25);
+
+
     cin >> resposta;
-    if (resposta == 1)
-    {
-        system("cls");
+   
+    if (resposta == 1){
         CriarArtigo(produtos, nomeProdutos);
     }
-    else
-    {
+
+    else{
         system("cls");
-        Stock(produtos, nomeProdutos);
     }
+
 }
 
 //? adicionar stock ao array Produtos
-void AdicionarStock(double **produtos, string *nomeProdutos)
-{
-    int resposta;
-    cout << "A que produto pretende adicionar Stock?" << endl;
-    cout << "\n\n0. Voltar ao menu anterior\n";
-    resposta = Verificador(3);
+void AdicionarStock(double **produtos, string *nomeProdutos){
 
-    for (int i = 0; i < 50; i++)
-    {
-        if (produtos[i][1] == resposta)
-        {
-            cout << "Pretende adicionar stock a " << nomeProdutos[i] << " ?\n";
-            cout << "1. Sim\n2.Nao\n";
+    int tamanho = 0, resposta = 999, quantidade = 0; // determina a quantidade de produtos existente
+    int size [50] = { 0 }; //determina posicao onde estao os produtos
+
+    for (int i=0; i<50; i++){
+        if (produtos[i][0] != 0){
+            size[i] = 1;
+            tamanho++;
+        }
+    }
+
+while (resposta != 0){
+        printAdicionarStock(produtos, nomeProdutos, tamanho, size);
+        cin >> setposx (41) >> setposy (tamanho+4 ) >>resposta;
+
+        while (cin.fail() || (resposta > tamanho || resposta < 0)){
+            cin.clear();
+            cin.ignore(256, '\n');
+            printAdicionarStock(produtos, nomeProdutos, tamanho, size);
+            cout << setposx(1) << setposy(tamanho + 10) << "Selecione uma opcao valida" << endl;
             cin >> resposta;
-            if (resposta == 1)
-            {
-                cout << "Quanto pretende adicionar ao stock? \n";
-                cin >> resposta;
-                produtos[1][i] = produtos[2][i] + resposta;
-                cout << "pretende adicionar mais stock? \n";
-                cout << "1.Sim\n2.Nao\n";
-                cin >> resposta;
-                if (resposta == 1)
-                {
-                    AdicionarStock(produtos, nomeProdutos);
-                }
-                else if (resposta == 2)
-                {
-                    system ("cls");
-                    Stock(produtos, nomeProdutos);
-                }
-            }
-            else if (resposta == 2)
-            {
-                AdicionarStock(produtos, nomeProdutos);
-            }
-            else if (resposta == 0)
-            {
-                Stock(produtos, nomeProdutos);
-            }
-            else if (resposta > 2 || resposta < 0)
-            {
-                cout << "insira uma opcao valida \n";
-                AdicionarStock(produtos, nomeProdutos);
-            }
+            cout << setposx(0) << setposy(tamanho + 11) << "            ";
+        }
+        if (resposta == 0){
+            break;
         }
 
+        if (resposta <= tamanho && resposta > 0){
+            system("cls");
+            printAdicionarStock(produtos, nomeProdutos, tamanho, size);
+            cout << setposx (1) << setposy (tamanho + 10) << "Introduza Quanto pretende Adicionar " << endl;
+            cin >> quantidade;
+            cout << setposx (1) << setposy (tamanho+ 10) << "                                             "; //apaga a linha acima
+            cout << setposx (0) << setposy (tamanho+11) << "           "; //apaga a linha do input
+                if ((produtos[resposta-1][1] + quantidade) < 0){ //se o user introduzir um valor que deixaria o stock em negativo
+                    quantidade = -(produtos[resposta-1][1]); //poe o stock a 0
+                }
+            produtos[resposta-1][1] = (produtos[resposta -1][1] + quantidade); //adiciona a quantidade escolhida do stock
+        }
     }
 }
 
@@ -538,78 +592,66 @@ void AdicionarStock(double **produtos, string *nomeProdutos)
 void EliminarArtigo(double **produtos, string *nomeProdutos)
 {
 
-    int resposta;
-    cout << "Insira o codigo do artigo que pretende eliminar \n";
-    cout << "Ou insira 0 para voltar ao menu anterior\n";
-    cin >> resposta;
+    int tamanho = 0, resposta = 999, choice = 0; // determina a quantidade de produtos existente
+    int size [50] = { 0 }; //determina posicao onde estao os produtos
 
-    for (int i = 0; i < 50; i++)
-    {
-        if (produtos[i][0] == resposta)
-        {
-            if (produtos[i][0] != 0)
-            {
-                cout << "Deseja Eliminar " << nomeProdutos[i] << " ?\n";
-                cout << "1. Sim \n2. Nao \n";
-                cin >> resposta;
-                if (resposta == 1)
-                {
-                    produtos[i][0] = 0;
-                    produtos[i][1] = 0;
-                    produtos[i][2] = 0;
-                    produtos[i][3] = 0;
+    for (int i=0; i<50; i++){
+        if (produtos[i][0] != 0){
+            size[i] = 1;
+            tamanho++;
+        }
+    }
+
+while (resposta != 0){
+        printEliminarArtigo(produtos, nomeProdutos, tamanho, size);
+        cin >> setposx (41) >> setposy (tamanho+4 ) >>resposta;
+
+        while (cin.fail() || (resposta > tamanho || resposta < 0)){
+            cin.clear();
+            cin.ignore(256, '\n');
+            printEliminarArtigo(produtos, nomeProdutos, tamanho, size);
+            cout << setposx(1) << setposy(tamanho + 10) << "Selecione uma opcao valida" << endl;
+            cin >> resposta;
+            cout << setposx(0) << setposy(tamanho + 11) << "            ";
+        }
+        if (resposta == 0){
+            break;
+        }
+
+        if (resposta <= tamanho && resposta > 0 && produtos[resposta-1][0] != 0){
+            system("cls");
+            printEliminarArtigo(produtos, nomeProdutos, tamanho, size);
+            cout << setposx (0) << setposy (tamanho + 10) << "Pretende Eliminar " << nomeProdutos[resposta-1] << endl;
+            cout << "1. Sim  2. Nao" << endl;
+            cin >> choice;
+            cout << setposx (0) << setposy (tamanho+10) << "                                                         "; //apaga a linha acima
+            cout << setposx (0) << setposy (tamanho+11) << "                            ";
+            cout << setposx (0) << setposy (tamanho+12) << "                            "; //apaga a linha do input
+                if (choice == 1){ //se o user introduzir um valor que deixaria o stock em negativo
+                    produtos[resposta-1][0] = 0;
+                    produtos[resposta-1][1] = 0;
+                    produtos[resposta-1][2] = 0;
+                    produtos[resposta-1][3] = 0;
+                    nomeProdutos[resposta-1] = "";
                 }
-                else if (resposta == 2)
-                {
-                    EliminarArtigo(produtos, nomeProdutos);
+                else {
+                    
                 }
-                else if (resposta == 0)
-                {
-                    Stock(produtos, nomeProdutos);
-                }
-                else if (resposta > 2 || resposta < 0)
-                {
-                    cout << "insira uma opcao valida \n";
-                    EliminarArtigo(produtos, nomeProdutos);
-                }
-            }
-            else
-            {
-                cout << "O Produto nao existe \n";
-                EliminarArtigo(produtos, nomeProdutos);
-            }
         }
     }
 }
 
 //! Opcao Relatorios no Menu
-void Relatorios(double** produtos, string* nomeProdutos, int** ClienteInt, string** ClienteString, int** StoreVendas)
+void Relatorios(double** produtos, string* nomeProdutos, int** ClienteInt, string** ClienteString, int** StoreVendas, double **InfoVendas)
 {
     int optionRelatorio, vectorSomaQtdProduto[51];
-    int numeroVendasmaior = -1, maisVendido, numeroVendasmenor = 999, menosVendido;
 
-    for (int i = 0; i < 50; i++){
-        if (produtos[i][3] > numeroVendasmaior){ //se a quantidade de vendas no vetor for maior que a quantidade de vendas guardada na variavel
-            cout << "entrou aqui em " << i << endl;
-            numeroVendasmaior = produtos[i][3]; //a quantidade de vendas passar a ser essa a maior
-            maisVendido = i; //e guarda a index desse produto
-        }
-        if (produtos[i][3] < numeroVendasmenor){
-            cout << "entrou aqui 2 em " << i << endl;
-            numeroVendasmenor = produtos[i][3];
-            menosVendido = i;
-        }
-    }
-
-            cout << "O mais vendido e " << nomeProdutos[maisVendido] << "\n o Menos vendido e " << nomeProdutos[menosVendido] << endl;
-    /*
-    para fazer a parte do maior lucro fazer o preco do produto * 0,30 ---> ter o valor do lucro, e multiplicar pelo numero de vendas de cada produto, assim vai
-    dar o que deu mais lucro*/
 
     cout << "********** Relatorios **********" << endl;
     cout << "1.Relatorio total de venda" << endl;
     cout << "2.Relatorio de venda por produtos" << endl;
     cout << "3.Relatorio total de stock" << endl;
+    cout << "4.Relatorio de Venda por Cliente" << endl;
     cout << "********************************" << endl;
     cout << "OPCAO (relatorio) : ";
     cin >> optionRelatorio;
@@ -620,7 +662,8 @@ void Relatorios(double** produtos, string* nomeProdutos, int** ClienteInt, strin
 
         system("cls");
         cout << "********** Relatorio total de venda **********" << endl;
-        cout << "O mais vendido e " << nomeProdutos[maisVendido] << "\n o Menos vendido e " << nomeProdutos[menosVendido] << endl;
+
+        RelatorioVendas(produtos,nomeProdutos,ClienteInt,ClienteString,StoreVendas);
         //produto mais vendido, produto menos vendido, produto com mais lucro, cliente que mais comprou
         cout << "***********************************************" << endl;
         system("pause");
@@ -664,6 +707,8 @@ void Relatorios(double** produtos, string* nomeProdutos, int** ClienteInt, strin
             }
             system("pause");
         break;
+    case 4:
+        RelatorioVendasPCliente (produtos, nomeProdutos, ClienteInt, ClienteString, StoreVendas, InfoVendas);
     default:
         break;
     }
@@ -677,7 +722,7 @@ void Clientes(int **ClienteInt, string **ClienteString)
     cout << "Que Operacao Pretende Realizar? \n";
     cout << "1.Criar Clientes \n";
     cout << "2.Eliminar Clientes \n";
-    cout << "3.Alterar Dados de Cliente \n";
+    cout << "3.Alterar Nome de Cliente \n";
     cout << "0.Voltar ao Menu Inicial\n";
     cin >> escolha;
 
@@ -761,62 +806,51 @@ void CriarCliente(int **ClienteInt, string **ClienteString)
 void EliminarCliente(int **ClienteInt, string **ClienteString)
 {
 
-    int resposta;
-    printEliminarCliente();
-    cin >> resposta;
+    int tamanho = 0, resposta = 999, choice = 0; // determina a quantidade de Clientes existente
+    int size [50] = { 0 }; //determina posicao onde estao os Clientes
 
-    if (resposta == 0){
-        system("cls");
-        return;
+    for (int i=0; i<50; i++){
+        if (ClienteInt[i][0] != 0){
+            size[i] = 1;
+            tamanho++;
+        }
     }
 
-    for (int i = 0; i < 50; i++)
-    {
-        if (ClienteInt[i][0] == resposta)
-        {
-            if (ClienteInt[i][0] != 0)
-            {
-                    system("cls");
-                    cout
-                    << endl
-                    <<setposx ((middle - 15)) << setposy (10)
-                                            <<".--------------------------------------." << endl
-                    <<setposx ((middle - 15)) <<"|                                      |" << endl
-                    <<setposx ((middle - 15)) <<"|                                      |" << endl
-                    <<setposx ((middle - 15)) <<"|                                      |" << endl
-                    <<setposx ((middle - 15)) <<"'--------------------------------------'";
-                    cout << setposx (middle- 13) << setposy (9) << "Deseja Eliminar:" << setposx (middle+8) << setposy (25);
-                    cout << setposx (middle- 13) << setposy (11) << ClienteInt[i][0] << " | " << ClienteString[i][0] << " ?";
-                    cout << setposx (middle - 13) << setposy (12) << "1. Sim  2. Nao";
-                    cin >> setposx(middle - 13) >> setposy (13) >> resposta;
-                if (resposta == 1)
-                {
-                    ClienteInt[i][0] = 0;
-                    ClienteInt[i][1] = 0;
-                    ClienteString[i][0] = "";
-                    ClienteString[i][1] = "";
+while (resposta != 0){
+        printEliminarCliente(ClienteInt, ClienteString, tamanho, size);
+        cin >> setposx (41) >> setposy (tamanho+4 ) >>resposta;
+
+        while (cin.fail() || (resposta > tamanho || resposta < 0)){
+            cin.clear();
+            cin.ignore(256, '\n');
+            printEliminarCliente(ClienteInt, ClienteString, tamanho, size);
+            cout << setposx(1) << setposy(tamanho + 10) << "Selecione uma opcao valida" << endl;
+            cin >> resposta;
+            cout << setposx(0) << setposy(tamanho + 11) << "            ";
+        }
+        if (resposta == 0){
+            system("cls");
+            break;
+        }
+
+        if (resposta <= tamanho && resposta > 0 && ClienteInt[resposta-1][0] != 0){
+            system("cls");
+            printEliminarCliente(ClienteInt, ClienteString, tamanho, size);
+            cout << setposx (0) << setposy (tamanho + 10) << "Pretende Eliminar " << ClienteString[resposta-1][0] << endl;
+            cout << "1. Sim  2. Nao" << endl;
+            cin >> choice;
+            cout << setposx (1) << setposy (tamanho+ 10) << "                                                         "; //apaga a linha acima
+            cout << setposx (0) << setposy (tamanho+11) << "                            ";
+            cout << setposx (0) << setposy (tamanho+12) << "                             "; //apaga a linha do input
+                if (choice == 1){ //se o user introduzir um valor que deixaria o stock em negativo
+                    ClienteInt[resposta-1][0] = 0;
+                    ClienteInt[resposta-1][1] = 0;
+                    ClienteString[resposta-1][0] = "";
+                    ClienteString[resposta-1][1] = "";
                 }
-                else if (resposta == 2)
-                {
-                    system("cls");
-                    EliminarCliente(ClienteInt, ClienteString);
+                else {
+
                 }
-                else if (resposta == 0)
-                {
-                    system("cls");
-                    Clientes(ClienteInt, ClienteString);
-                }
-                else if (resposta > 2 || resposta < 0)
-                {
-                    cout << "insira uma opcao valida \n";
-                    EliminarCliente(ClienteInt, ClienteString);
-                }
-            }
-            else
-            {
-                cout << "O Cliente nao existe \n";
-                EliminarCliente(ClienteInt, ClienteString);
-            }
         }
     }
 }
@@ -824,70 +858,43 @@ void EliminarCliente(int **ClienteInt, string **ClienteString)
 //? Alterar nome de Cliente
 void AlterarNome(int **ClienteInt, string **ClienteString){
 
-    int resposta = 0;
+    int tamanho = 0, resposta = 999, choice = 0; // determina a quantidade de Clientes existente
+    int size [50] = { 0 }; //determina posicao onde estao os Clientes
     string NovoNome;
-
-    cout << "Insira o Codigo do Cliente que pretende alterar o nome" << endl;
-    cout << "\n\n0. Voltar ao menu anterior\n";
-    cin >> resposta;
-
-    if (resposta == 0) {
-        Clientes(ClienteInt, ClienteString);
-    }
-    
-    for (int i = 0; i < 50; i++)
-    {
-        if (ClienteInt[i][0] == resposta && ClienteInt[0][i] != 0){
-            cout << "Pretende alterar o nome de" << ClienteInt[i][0] << " | " << ClienteString[i][0] << " ?\n";
-            cout << "1. Sim\n2.Nao\n";
-            cin >> resposta;
-            if (resposta == 1)
-            {
-                cout << "Insira o nome a gravar \n";
-                cin >> resposta;
-                ClienteString[i][0] = NovoNome;
-                cout << "Pretende Editar mais algum cliente? \n";
-                cout << "1.Sim\n2.Nao\n";
-                cin >> resposta;
-                if (resposta == 1)
-                {
-                    system("cls");
-                    AlterarNome(ClienteInt, ClienteString);
-                }
-                else if (resposta == 2)
-                {
-                    Clientes(ClienteInt, ClienteString);
-                }
-                else if (resposta > 2 || resposta < 0)
-                {
-                    AlterarNome(ClienteInt, ClienteString);
-                }
-            }
-            else if (resposta == 2)
-            {
-                AlterarNome(ClienteInt, ClienteString);
-            }
-            else if (resposta > 2 || resposta < 0)
-            {
-                cout << "insira uma opcao valida \n";
-                AlterarNome(ClienteInt, ClienteString);
-            }
+    for (int i=0; i<50; i++){
+        if (ClienteInt[i][0] != 0){
+            size[i] = 1;
+            tamanho++;
         }
     }
-    cout << "Cliente nao existe, pretende criar novo cliente? " << endl;
-    cout << "1. Sim \n" << "2. Nao, Tentar novamente \n" << "3. Cancelar \n";
-    cin >> resposta;
-    switch (resposta)
-    {
-    case 1:
-        CriarCliente(ClienteInt, ClienteString);
-        break;
-    
-    case 2:
-        AlterarNome(ClienteInt, ClienteString);
-        break;
-    case 3:
-        Clientes(ClienteInt, ClienteString);
+
+while (resposta != 0){
+        printAlterarNome(ClienteInt, ClienteString, tamanho, size);
+        cin >> setposx (41) >> setposy (tamanho+4 ) >>resposta;
+
+        while (cin.fail() || (resposta > tamanho || resposta < 0)){
+            cin.clear();
+            cin.ignore(256, '\n');
+            printAlterarNome(ClienteInt, ClienteString, tamanho, size);
+            cout << setposx(1) << setposy(tamanho + 10) << "Selecione uma opcao valida" << endl;
+            cin >> resposta;
+            cout << setposx(0) << setposy(tamanho + 11) << "            ";
+        }
+        if (resposta == 0){
+            system("cls");
+            break;
+        }
+
+        if (resposta <= tamanho && resposta > 0 && ClienteInt[resposta-1][0] != 0){
+            system("cls");
+            printAlterarNome(ClienteInt, ClienteString, tamanho, size);
+            cout << setposx (0) << setposy (tamanho + 10) << "Insira novo nome para: " << ClienteString[resposta-1][0] << endl;
+            cin >> NovoNome;
+            cout << setposx (1) << setposy (tamanho+ 10) << "                                                         "; //apaga a linha acima
+            cout << setposx (0) << setposy (tamanho+11) << "                            ";
+            cout << setposx (0) << setposy (tamanho+12) << "                             "; //apaga a linha do input
+            ClienteString[resposta-1][0] = NovoNome;
+        }
     }
 }
 
@@ -932,7 +939,7 @@ void printstocks(double **produtos, string *nomeProdutos, int **ClienteInt, stri
 //! Verificar se as opcoes que estao ser introduzidas pelo user sao validas, se sao o datatype pedido ou se sao opcoes validas
 int Verificador(int aux){
     int escolha;
-    const int MAINMENU = 1;
+    const int MAINMENU = 1, ADICIONAR_STOCK = 3;
 
     if (aux == MAINMENU){
         if ((!(cin >> escolha) || escolha < 1 || escolha > 4) && escolha != 99 && escolha != 98){
@@ -961,24 +968,10 @@ int Verificador(int aux){
             while (!(cin >> escolha) || escolha < 0 || escolha > 3);
         } 
     }
-        if (aux == 3){
-        if (!(cin >> escolha)){
-            do{
-                if (!cin){
-                    cin.clear();
-                    cin.ignore(256, '\n');
-                    cout << "Insira um Codigo de Produto Valido";
-                    cout << "\x1b[2A\r";
-                    cout << endl;
-                }
-            } 
-            while (!(cin >> escolha));
-        } 
-    }
     return escolha;
 }
 
-void PreencherParaTeste (double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString) {
+void PreencherDados (double **produtos, string *nomeProdutos, int **ClienteInt, string **ClienteString) {
     produtos[0][0] = 001; //produto 1
     produtos[0][1] = 12; // stock
     produtos[0][2] = 19.99; // preco
@@ -1003,18 +996,18 @@ void PreencherParaTeste (double **produtos, string *nomeProdutos, int **ClienteI
     nomeProdutos[3] = "Cadeira";
     nomeProdutos[4] = "Tartaruga";
 
-    ClienteInt[0][0] = 0001;
-    ClienteInt[0][1] = 932885712;
-    ClienteInt[1][0] = 0002;
+    ClienteInt[0][0] = 999;
+    ClienteInt[0][1] = 0;
+    ClienteInt[1][0] = 2;
     ClienteInt[1][1] = 978264019;
-    ClienteInt[2][0] = 0003;
+    ClienteInt[2][0] = 3;
     ClienteInt[2][1] = 915274921;
-    ClienteInt[3][0] = 0004;
+    ClienteInt[3][0] = 4;
     ClienteInt[3][1] = 927162542;
 
-    ClienteString[0][0] = "Alberto";
-    ClienteString[0][1] = "Rua dos Peregrinos n219";
-    ClienteString[1][0] = "Claudete";
+    ClienteString[0][0] = "Cliente Final";
+    ClienteString[0][1] = "";
+    ClienteString[1][0] = "Renato";
     ClienteString[1][1] = "Rua das Tangerinas n221";
     ClienteString[2][0] = "Filomena";
     ClienteString[2][1] = "Travessa das Travessas";
@@ -1024,9 +1017,19 @@ void PreencherParaTeste (double **produtos, string *nomeProdutos, int **ClienteI
 }
 
 void printTime(){
-time_t tim = time(0);
-        tm* gottime = gmtime(&tim);
-        cout << gottime->tm_mday << gottime->tm_yday; 
+
+    string meses [12] = {"JANEIRO", "FEVEREIRO", "MARCO", "ABRIL", "MAIO", "JUNHO", "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO"};
+    string mes;
+    time_t tim = time(0);
+    tm* gottime = gmtime(&tim);
+
+    for (int i = 0; i<12; i++){
+        if (gottime->tm_mon = i+1){
+            mes = meses[i];
+        }
+    }
+
+    cout << "Data: " << gottime->tm_mday << " de " << mes << " de " << gottime->tm_year+1900 << "  Hora: " << gottime->tm_hour << ":" << gottime->tm_min << ":" << gottime->tm_sec;
 }
 
 
@@ -1217,19 +1220,196 @@ void printCriarCliente(int **ClienteInt, string **ClienteString){
 
 }
 
-void printEliminarCliente(){
+void printEliminarCliente(int **ClienteInt, string **ClienteString, int tamanho, int size[]){
+
+    cout 
+        << setposx (3) << setposy(1) << "Clientes: "
+        << setposx (0) << setposy (2)  //estava a 12
+        <<".-----------------------------------------------------." << endl;
+    for (int i = 0; i <= tamanho + 1; i++){
+        cout <<"|                                                     |" << endl;
+    }
+        cout <<"'-----------------------------------------------------'" << endl;
+
+    for (int i = 0; i < 50; i++){
+        if (size[i] != 0) {
+        cout << setposx (1) << setposy (i+3) << "ID " << i + 1 << " | " << setposx (8) <<"Nome: " << ClienteString[i][0] << endl; 
+        }
+        cout << setposx (1) << setposy (tamanho + 4) << "Que Cliente pretende Eliminar?" << endl;
+        cout << setposx (1) << setposy (tamanho + 3) << "-----------------------------------------------------" << endl;
+        cout << setposx (1) << setposy (tamanho + 6) << "0. Voltar ao menu Inicial";
+    }   
+
+}
+
+void printAlterarNome(int **ClienteInt, string **ClienteString, int tamanho, int size[]){
+
+    cout 
+        << setposx (3) << setposy(1) << "Clientes: "
+        << setposx (0) << setposy (2)  //estava a 12
+        <<".-----------------------------------------------------." << endl;
+    for (int i = 0; i <= tamanho + 1; i++){
+        cout <<"|                                                     |" << endl;
+    }
+        cout <<"'-----------------------------------------------------'" << endl;
+
+    for (int i = 0; i < 50; i++){
+        if (size[i] != 0) {
+        cout << setposx (1) << setposy (i+3) << "ID " << i + 1 << " | " << setposx (8) <<"Nome: " << ClienteString[i][0] << endl; 
+        }
+        cout << setposx (1) << setposy (tamanho + 4) << "Que Cliente pretende Alterar o Nome?" << endl;
+        cout << setposx (1) << setposy (tamanho + 3) << "-----------------------------------------------------" << endl;
+        cout << setposx (1) << setposy (tamanho + 6) << "0. Voltar ao menu Inicial";
+    }   
+}
+
+
+
+void printCriarArtigo(double **produtos, string *NomeProdutos){
 
     cout
     << endl
-    <<setposx ((middle-15)) << setposy (10)  //estava a 12
-                            <<".---------------------------------------------------." << endl
-    <<setposx ((middle-15)) <<"|                                                   |" << endl
-    <<setposx ((middle-15)) <<"|                                                   |" << endl
-    <<setposx ((middle-15)) <<"|                                                   |" << endl
-    <<setposx ((middle-15)) <<"|                                                   |" << endl
-    <<setposx ((middle-15)) <<"'---------------------------------------------------'";
-    cout << setposx (middle-13) << setposy (11) << "Insira o Codigo do Cliente que pretende Eliminar" << setposx (middle+8) << setposy (25);
-    cout << setposx (middle-13) << setposy (12) << "0. Voltar ao menu anterior" << setposx (middle+8) << setposy (25);
-    cout << setposx (middle-13) << setposy (14) << "Insira uma opcao: " << setposx (middle + 5);
+    <<setposx ((middle-16)) << setposy (7)  //estava a 12
+                            <<".--------------------------------." << endl
+    <<setposx ((middle-16)) <<"|                                |" << endl
+    <<setposx ((middle-16)) <<"|                                |" << endl
+    <<setposx ((middle-16)) <<"|                                |" << endl
+    <<setposx ((middle-16)) <<"|                                |" << endl
+    <<setposx ((middle-16)) <<"'--------------------------------'" << endl;
+
+    int escolha;
+    const int VENDAS = 1, STOCK = 2, RELATORIOS = 3, CLIENTES = 4;
+    cout << setposx (middle-14) << setposy (6) << "Novo Produto";
+    cout << setposx (middle-14) << setposy (8) << "ID Produto:";
+    cout << setposx (middle-14) << setposy (9) << "Nome Produto:";
+    cout << setposx (middle-14) << setposy (10) << "Stock:";
+    cout << setposx (middle-14) << setposy (11) << "Preco Custo:";
+
+}
+
+
+void printAdicionarStock(double **produtos, string *nomeProdutos, int tamanho, int size[]){
+    cout 
+        << setposx (3) << setposy(1) << "Produtos: "
+        << setposx (0) << setposy (2)  //estava a 12
+        <<".------------------------------------------------------------." << endl;
+    for (int i = 0; i <= tamanho + 1; i++){
+        cout <<"|                                                            |" << endl;
+    }
+        cout <<"'------------------------------------------------------------'" << endl;
+
+    for (int i = 0; i < 50; i++){
+        if (size[i] != 0) {
+        cout << setposx (1) << setposy (i+3) << i + 1 << ". " << setposx (4) << nomeProdutos[i] << setposx (18) <<"| stock: " << produtos[i][1] << setposx (36) <<"| preco " << setposx (46) << ceil((produtos[i][2] + (produtos[i][2] * 0.30))*100.0) / 100.0 << endl; 
+        }
+        cout << setposx (1) << setposy (tamanho + 4) << "A que produto pretende adicionar stock?" << endl;
+        cout << setposx (1) << setposy (tamanho + 3) << "------------------------------------------------------------" << endl;
+        cout << setposx (1) << setposy (tamanho + 6) << "0. Voltar ao menu Inicial";
+    }   
+}
+
+void printEliminarArtigo(double **produtos, string *nomeProdutos, int tamanho, int size[]){
+    cout 
+        << setposx (3) << setposy(1) << "Produtos: "
+        << setposx (0) << setposy (2)  //estava a 12
+        <<".------------------------------------------------------------." << endl;
+    for (int i = 0; i <= tamanho + 1; i++){
+        cout <<"|                                                            |" << endl;
+    }
+        cout <<"'------------------------------------------------------------'" << endl;
+
+    for (int i = 0; i < 50; i++){
+        if (size[i] != 0) {
+        cout << setposx (1) << setposy (i+3) << i + 1 << ". " << setposx (4) << nomeProdutos[i] << setposx (18) <<"| stock: " << produtos[i][1] << setposx (36) <<"| preco " << setposx (46) << ceil((produtos[i][2] + (produtos[i][2] * 0.30))*100.0) / 100.0 << endl; 
+        }
+        cout << setposx (1) << setposy (tamanho + 4) << "Que produto pretende Eliminar?" << endl;
+        cout << setposx (1) << setposy (tamanho + 3) << "------------------------------------------------------------" << endl;
+        cout << setposx (1) << setposy (tamanho + 6) << "0. Voltar ao menu Inicial";
+    }   
+
+}
+
+
+string CompararArtigos(string *nomeProdutos, int i){
+    
+    string novoProd;
+
+    bool flag = true;
+
+        do{
+
+            cin.ignore(256, '\n');
+            cin >> novoProd;
+            for (int j = 0; j<50; j++){
+                if (novoProd == nomeProdutos[j]){
+                    cout << "Produto " << novoProd << " ja Existe" << endl;
+                    cout << setposx(middle) << setposy(9) << "            ";
+                    cout << setposx(middle) << setposy(9);
+                    flag = true;
+                    break;
+                }
+                flag = false;
+            }
+
+            
+        } 
+        while (flag == true);
+
+    return novoProd;
+}
+
+
+void RelatorioVendas(double** produtos, string* nomeProdutos, int** ClienteInt, string** ClienteString, int** StoreVendas){
+        int numeroVendasmaior = -1, maisVendido, numeroVendasmenor = 999, menosVendido, maisLucro = 0;
+    double lucro = 0;
+
+    for (int i = 0; i < 50; i++){
+        if (produtos[i][3] > numeroVendasmaior){ //se a quantidade de vendas no vetor for maior que a quantidade de vendas guardada na variavel
+            numeroVendasmaior = produtos[i][3]; //a quantidade de vendas passar a ser essa a maior
+            maisVendido = i; //e guarda a index desse produto
+        }
+        if (produtos[i][3] < numeroVendasmenor){
+            numeroVendasmenor = produtos[i][3];
+            menosVendido = i;
+        }
+    }
+
+            cout << "O mais vendido e " << nomeProdutos[maisVendido] << " com " << produtos[maisVendido][3] << " unidades vendidos" << "\nO Menos vendido e " << nomeProdutos[menosVendido] << " com" << produtos[menosVendido][3] << " unidades vendidas" << endl;
+    
+    for (int i = 0; i< 50; i++){
+        if (((produtos[i][2] * produtos[i][3]) * 0,3) > lucro){
+            lucro = ((produtos[i][2] * produtos[i][3]) * 0,3);
+            maisLucro = produtos[i][0];
+        }
+    }
+        cout << "O produto com mais lucro e " << nomeProdutos[maisLucro] << endl;
+}
+
+void RelatorioVendasPCliente (double** produtos, string* nomeProdutos, int** ClienteInt, string** ClienteString, int** StoreVendas, double **InfoVendas){
+
+    string nomeCliente;
+    cin.ignore(256, '\n');
+    getline(cin, nomeCliente);
+    int numvendas = 0;
+    int numCliente;
+
+
+    for (int i = 0; i<50; i++){
+        if (nomeCliente == ClienteString[i][0]){
+            numCliente = i;
+        }
+        else {
+            cout << " O cliente nao existe" << endl;
+        }
+        return;
+    }
+
+    for (int i = 0; i<100; i ++){
+        if (numCliente == InfoVendas[i][0]){
+        numvendas++;
+        }
+    }
+
+    cout << "O cliente tem um total de " << numvendas << " compras efetuadas" << endl;
 
 }
