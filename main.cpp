@@ -60,6 +60,7 @@ void printEliminarArtigo(double **produtos, string *nomeProdutos, int tamanho, i
 void Relatorios(double** produtos, string* nomeProdutos, int** ClienteInt, string** ClienteString, int** StoreVendas, double **InfoVendas);
 void RelatorioVendas(double** produtos, string* nomeProdutos, int** ClienteInt, string** ClienteString, int** StoreVendas);
 void RelatorioVendasPCliente (double** produtos, string* nomeProdutos, int** ClienteInt, string** ClienteString, int** StoreVendas, double **InfoVendas);
+void RelatorioTotalStock(double **produtos, string *nomeProdutos);
 
 //? Zona Clientes
 void Clientes(int **ClienteInt, string **ClienteString);
@@ -695,17 +696,8 @@ void Relatorios(double** produtos, string* nomeProdutos, int** ClienteInt, strin
     case 3:
         /* usei o 4 por ser o tamanho atual da matriz produtos, no futuro pretendo usar uma variavel "size"
         para tornar dinamico o print da matriz produto*/
-        system("cls");
         cout << "3.Relatorio total de stock" << endl;
-        for (int h = 0; h < 4; h++) {
-            for (int g = 0; g < 4; g++) {
-                if (produtos[h][g] > 0 ) {
-                    cout << produtos[h][g] << "  ";
-                }
-            }
-            cout << endl;
-            }
-            system("pause");
+        RelatorioTotalStock(produtos, nomeProdutos);
         break;
     case 4:
         RelatorioVendasPCliente (produtos, nomeProdutos, ClienteInt, ClienteString, StoreVendas, InfoVendas);
@@ -1412,4 +1404,35 @@ void RelatorioVendasPCliente (double** produtos, string* nomeProdutos, int** Cli
 
     cout << "O cliente tem um total de " << numvendas << " compras efetuadas" << endl;
 
+}
+
+void RelatorioTotalStock(double **produtos, string *nomeProdutos){
+    int tamanho = 0;
+    int size[50] = { 0 };
+
+            for (int i=0; i<50; i++){
+        if (produtos[i][0] != 0){
+            size[i] = 1;
+            tamanho++;
+        }
+    }
+        system("cls");
+        
+    cout 
+        << setposx (3) << setposy(1) << "Produtos: "
+        << setposx (0) << setposy (2)  //estava a 12
+        <<".------------------------------------------------------------." << endl;
+    for (int i = 0; i <= tamanho + 1; i++){
+        cout <<"|                                                            |" << endl;
+    }
+        cout <<"'------------------------------------------------------------'" << endl;
+
+    for (int i = 0; i < 50; i++){
+        if (size[i] != 0) {
+        cout << setposx (1) << setposy (i+3) << i + 1 << ". " << setposx (4) << nomeProdutos[i] << setposx (18) <<"| stock: " << produtos[i][1] << setposx (36) <<"| preco " << setposx (46) << ceil((produtos[i][2] + (produtos[i][2] * 0.30))*100.0) / 100.0 << endl; 
+        }
+        cout << setposx (1) << setposy (tamanho + 3) << "------------------------------------------------------------" << endl;
+            }
+            cout << setposx (2);
+            system("pause");
 }
