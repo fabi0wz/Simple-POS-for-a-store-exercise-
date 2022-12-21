@@ -1379,31 +1379,34 @@ void RelatorioVendas(double** produtos, string* nomeProdutos, int** ClienteInt, 
 
 void RelatorioVendasPCliente (double** produtos, string* nomeProdutos, int** ClienteInt, string** ClienteString, int** StoreVendas, double **InfoVendas){
 
+    cout << "Insira o nome do Cliente" << endl;
+
     string nomeCliente;
     cin.ignore(256, '\n');
-    getline(cin, nomeCliente);
+    cin >> nomeCliente;
     int numvendas = 0;
-    int numCliente;
+    int numCliente = 0;
 
 
     for (int i = 0; i<50; i++){
-        if (nomeCliente == ClienteString[i][0]){
-            numCliente = i;
+        if (nomeCliente.compare(ClienteString[i][0])){
+            numCliente = i+2;
+            break;
         }
         else {
             cout << " O cliente nao existe" << endl;
-        }
-        return;
-    }
-
-    for (int i = 0; i<100; i ++){
-        if (numCliente == InfoVendas[i][0]){
-        numvendas++;
+            system("pause");
         }
     }
 
-    cout << "O cliente tem um total de " << numvendas << " compras efetuadas" << endl;
-
+    for (int i = 0; i<100; i++){
+        if (InfoVendas[i][0] == numCliente){
+            cout << "testsste";
+            numvendas++;
+        }
+    }
+    cout << "\n\nO cliente tem um total de " << numvendas << " compras efetuadas" << endl;
+    system("pause");
 }
 
 void RelatorioTotalStock(double **produtos, string *nomeProdutos){
