@@ -8,3 +8,5 @@ This was made for a project in my C++ Class, where we had to make a simple termi
 - And also does sales reports
 
 the program still has some problems, namely in the reports part that i'm working on fixing in the near future
+
+also we could onlny use functions and data structures, no  classes or objects for this project
