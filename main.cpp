@@ -61,6 +61,7 @@ void Relatorios(double** produtos, string* nomeProdutos, int** ClienteInt, strin
 void RelatorioVendas(double** produtos, string* nomeProdutos, int** ClienteInt, string** ClienteString, int** StoreVendas);
 void RelatorioVendasPCliente (double** produtos, string* nomeProdutos, int** ClienteInt, string** ClienteString, int** StoreVendas, double **InfoVendas);
 void RelatorioTotalStock(double **produtos, string *nomeProdutos);
+void RelatorioVendaPorProduto(double **produtos, string *nomeProdutos, int **StoreVendas);
 
 //? Zona Clientes
 void Clientes(int **ClienteInt, string **ClienteString);
@@ -675,20 +676,7 @@ void Relatorios(double** produtos, string* nomeProdutos, int** ClienteInt, strin
         em diversas vendas dentro da matriz StoreVendas*/
         system("cls");
         cout << "********** Relatorio de venda por produtos **********" << endl;
-        for (int i = 1; i < 51; i++)
-        {   
-            int SomaQtdProduto = 0;
-            for (int j = 1; j < 100; j++)
-            {
-                if (StoreVendas[j][i] > 0 ) {
-                    SomaQtdProduto += StoreVendas[j][i];
-                    //vectorSomaQtdProduto[i - 1] = SomaQtdProduto; ativar se (A)  nao funcionar
-                }
-            }
-            /*(A) - Para que o vetor apenas guarde o valor final da soma de cada coluna corespondente
-            ao total de venda de cada produto */
-            vectorSomaQtdProduto[i - 1] = SomaQtdProduto;
-        }
+        RelatorioVendaPorProduto(produtos, nomeProdutos, StoreVendas);
         cout << "*************************************************" << endl;
         system("pause");
         break;
@@ -1366,7 +1354,7 @@ void RelatorioVendas(double** produtos, string* nomeProdutos, int** ClienteInt, 
         }
     }
 
-            cout << "O mais vendido e " << nomeProdutos[maisVendido] << " com " << produtos[maisVendido][3] << " unidades vendidos" << "\nO Menos vendido e " << nomeProdutos[menosVendido] << " com" << produtos[menosVendido][3] << " unidades vendidas" << endl;
+            cout << "O mais vendido e " << nomeProdutos[maisVendido] << " com " << produtos[maisVendido][3] << " unidades vendidos" << "\nO Menos vendido e " << nomeProdutos[menosVendido] << " com " << produtos[menosVendido][3] << " unidades vendidas" << endl;
     
     for (int i = 0; i< 50; i++){
         if (((produtos[i][2] * produtos[i][3]) * 0,3) > lucro){
@@ -1438,4 +1426,25 @@ void RelatorioTotalStock(double **produtos, string *nomeProdutos){
             }
             cout << setposx (2);
             system("pause");
+}
+
+void RelatorioVendaPorProduto(double **produtos, string *nomeProdutos, int **StoreVendas){
+
+int CodigoInserido, indexProduto, QtdVendas;
+cout << "insira o codigo do produto" << endl;
+cin >> CodigoInserido;
+int totalVendas = 0;
+
+for (int i = 0; i<50; i++){
+    if (produtos[i][0] == CodigoInserido){
+        indexProduto = i;
+    }
+}
+
+for (int i = 0; i<100; i++){
+    totalVendas = totalVendas + StoreVendas[i][indexProduto+1];
+}
+
+cout << "O " << nomeProdutos[indexProduto] << " tem " << totalVendas << " unidades Vendidas.";
+
 }
